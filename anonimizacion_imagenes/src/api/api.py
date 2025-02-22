@@ -3,6 +3,7 @@
 from io import BytesIO
 from flask import Flask, jsonify, request, send_file
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
+from src.infraestructura.publicadores import PublicadorEventos
 
 app = Flask(__name__)
 
@@ -24,6 +25,18 @@ def anonimizar_imagen():
         image_data = file.read()
         image_stream = BytesIO(image_data)
         image_stream2=servicio_anonimizar_imagen(image_stream)
+        # llamar a publicadores para publicar evento
+        publicador = PublicadorEventos('pulsar://localhost:6650')
+        evento = {
+            'evento': 'Imagen anonimizada',
+            'filename': file.filename,
+            'size': len(image_data)
+        }
+        publicador.publicar_evento(
+            'eventos-anonimizador',
+            str(evento)
+        )
+        publicador.cerrar()
         return send_file(
             image_stream2,
             mimetype="image/jpeg",  # Correct MIME type for JPEG images
