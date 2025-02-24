@@ -38,7 +38,16 @@ def register():
 
 @auth_blueprint.route("/login", methods=["POST"])
 def login():
-    ...
+    data = request.json
+    user = auth_service.authenticate_user(data["email"], data["password"])
+    if not user:
+        return jsonify({"message": "Credenciales inválidas"}), 401
+
+    token = TokenService.generate_token(user.id)
+    return jsonify({
+        "message": "Autenticación exitosa",
+        "token": token
+    })
 
 @auth_blueprint.route("/profile", methods=["GET"])
 @token_required
