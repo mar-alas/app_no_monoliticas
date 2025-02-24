@@ -3,3 +3,5 @@ anonimizacion_imagenes/tests/test_image.jpg
 *.cpython-310.pyc
 anonimizacion_imagenes/src/api/__pycache__
 anonimizacion_imagenes/src/api/__pycache__/api.cpython-310.pyc
+data/*
+.venv/
