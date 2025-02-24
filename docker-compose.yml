@@ -94,8 +94,8 @@ services:
       - "8080:8080"
     command: bash -c "bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker"
 
-  db:
-    image: postgres:16
+  user_db:
+    image: postgres:15
     container_name: postgres_db
     restart: always
     environment:
@@ -107,6 +107,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
 
   user_service:
     build:
@@ -115,11 +120,12 @@ services:
     container_name: user_auth_service
     restart: always
     depends_on:
-      - db
+      user_db:
+        condition: service_healthy 
     environment:
-      DATABASE_URL: postgresql://user:password@db/user_db
+      DATABASE_URL: postgresql://user:password@user_db/user_db
     ports:
       - "8000:8000"
-      
+
 volumes:
   postgres_data:

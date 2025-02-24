@@ -52,4 +52,4 @@ def login():
 @auth_blueprint.route("/profile", methods=["GET"])
 @token_required
 def profile(user_id):
-   ...
+    return jsonify({"message": "Perfil de usuario", "user_id": user_id})
