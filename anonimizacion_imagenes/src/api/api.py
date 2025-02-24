@@ -3,8 +3,11 @@
 from io import BytesIO
 from flask import Flask, jsonify, request, send_file
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
-from src.infraestructura.publicadores import PublicadorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
+from pydispatch import dispatcher
+from src.dominio.eventos import ImagenAnonimizada
+from datetime import datetime
+from uuid import uuid4
 
 app = Flask(__name__)
 
@@ -34,30 +37,24 @@ def anonimizar_imagen():
 
         image_stream = BytesIO(image_data)
         image_stream2 = servicio_anonimizar_imagen(image_stream)
-    
-        # llamar a publicadores para publicar evento
+
         try:
-            publicador = PublicadorEventos('pulsar://localhost:6650')
-            evento = {
-                'evento': 'Imagen anonimizada',
-                'filename': file.filename,
-                'size': len(image_data)
-            }
-            publicador.publicar_evento(
-                'eventos-anonimizador',
-                str(evento)
+            evento = ImagenAnonimizada(
+                id_imagen=uuid4(),  # add an uuid
+                filename=file.filename,
+                size=len(image_data),
+                fecha_creacion=datetime.utcnow()
             )
-            publicador.cerrar()
+            dispatcher.send(signal=f'{ImagenAnonimizada.__name__}Integracion', sender=image_stream2, evento=evento)
         except Exception as e:
             # Log the error but continue with the response
             print(f"Error al publicar evento: {str(e)}")
-        
         return send_file(
             image_stream2,
             mimetype="image/jpeg",  # Correct MIME type for JPEG images
             as_attachment=False,    # Set to True if you want to force download
             download_name=file.filename  # Optional: Set the filename for the response
-        ) 
+        )
     except Exception as e:
         return jsonify(error=f"Error inesperado: {str(e)}. Intente mas tarde.",), 500
     
