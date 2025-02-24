@@ -5,14 +5,16 @@ from flask import Flask, jsonify, request, send_file
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 from src.infraestructura.publicadores import PublicadorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
-
+from src.seedwork.aplicacion.autenticacion import token_required
 app = Flask(__name__)
 
 @app.route('/')
+@token_required
 def home():
     return jsonify(message="Welcome to the Flask app!")
 
 @app.route('/anonimizar-imagen', methods=['POST'])
+@token_required
 def anonimizar_imagen():
     try:
         if not ImagenDeAnonimizacionEsValida(request.files['image']).es_valido():
