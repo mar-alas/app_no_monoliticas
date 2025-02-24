@@ -30,11 +30,11 @@ def token_required(f):
 @auth_blueprint.route("/register", methods=["POST"])
 def register():
     data = request.json
-    user = auth_service.register_user(data["name"], data["email"], data["password"])
-    return jsonify({
-        "message": "Usuario registrado exitosamente",
-        "user_id": str(user.id)
-    }), 201
+    try:
+        result = auth_service.register_user(data["name"], data["email"], data["password"])
+        return jsonify(result), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
 @auth_blueprint.route("/login", methods=["POST"])
 def login():
