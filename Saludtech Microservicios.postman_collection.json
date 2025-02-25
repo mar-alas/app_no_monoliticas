@@ -1,13 +1,13 @@
 {
 	"info": {
-		"_postman_id": "2b66e386-be85-4835-873a-d1e17fd66dea",
-		"name": "anonimizacion",
+		"_postman_id": "e3a69178-15dd-41cc-aeee-d81d287c01b2",
+		"name": "Saludtech Microservicios",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1812580"
 	},
 	"item": [
 		{
-			"name": "anonimizar-imagen",
+			"name": "Micros.Anonimiz-anonimizar",
 			"event": [
 				{
 					"listen": "test",
@@ -47,7 +47,14 @@
 			],
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOGZkZmJlNi1iMjBhLTQ0NDktYWExMC0xZTg3YTdkNTJlMzIiLCJleHAiOjE3NDA1MjI2NTd9.eYTatRZowRoO7LbIGwvmw_XMHC_p1dEG-0wCoEwedNQ",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -73,6 +80,75 @@
 					"port": "5000",
 					"path": [
 						"anonimizar-imagen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Micros.Anonimiz-health",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOGZkZmJlNi1iMjBhLTQ0NDktYWExMC0xZTg3YTdkNTJlMzIiLCJleHAiOjE3NDA1MjI2NTd9.eYTatRZowRoO7LbIGwvmw_XMHC_p1dEG-0wCoEwedNQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Micros.Usarios-login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n           \"email\": \"admin@example.com\",\n           \"password\": \"admin123\"\n         }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"login"
 					]
 				}
 			},
