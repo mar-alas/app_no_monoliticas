@@ -4,6 +4,8 @@ from src.infraestructura.suscriptores import SuscriptorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 from src.seedwork.aplicacion.autenticacion import token_required
 import logging
+from src.infraestructura.gcp_storage import GCPStorage
+from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -21,8 +23,14 @@ def procesar_comando_ingesta(mensaje):
     """
     try:
         logger.info(f"Comando de ingesta recibido: {mensaje}")
-        # Aquí se implementaría la lógica para procesar el comando
-        # Por ejemplo: descargar la imagen desde una URL, validarla, etc.
+        gCPStorage=GCPStorage()
+        id=mensaje["id"]
+        filename=mensaje["filename"]
+        proveedor=mensaje["proveedor"]
+        nombre=id+"_"+filename
+        stream_imagen_sin_anomizar= gCPStorage.descargar_imagen(nombre,proveedor)
+        stream_imagen_anonimizada=servicio_anonimizar_imagen(stream_imagen_sin_anomizar)
+        gCPStorage.subir_imagen('anonimizada_'+ nombre,stream_imagen_anonimizada,proveedor)
     except Exception as e:
         logger.error(f"Error procesando comando de ingesta: {str(e)}")
 
@@ -34,7 +42,6 @@ def iniciar_suscriptor():
         logger.info("Iniciando suscriptor de eventos...")
         suscriptor = SuscriptorEventos('pulsar://localhost:6650')
         
-        # Suscribirse al tópico comando_ingesta_imagenes
         suscriptor.suscribirse_a_topico(
             'comando_ingesta_imagenes',
             'anonimizacion-service-sub',

@@ -8,3 +8,5 @@ data/*
 anonimizacion_imagenes/venv
 ingesta_imagenes/venv/
 ingesta_imagenes/.keys
+anonimizacion_imagenes/.keys
+*.jpeg
