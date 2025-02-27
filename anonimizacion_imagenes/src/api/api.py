@@ -64,7 +64,4 @@ def anonimizar_imagen():
         return jsonify(error=f"Error inesperado: {str(e)}. Intente mas tarde.",), 500
     
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
