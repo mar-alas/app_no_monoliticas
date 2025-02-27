@@ -6,6 +6,7 @@ from src.seedwork.aplicacion.autenticacion import token_required
 import logging
 from src.infraestructura.gcp_storage import GCPStorage
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
+import os
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -40,7 +41,9 @@ def iniciar_suscriptor():
     global suscriptor
     try:
         logger.info("Iniciando suscriptor de eventos...")
-        suscriptor = SuscriptorEventos('pulsar://localhost:6650')
+        #TODO hacer refactoring
+        pulsar_host=os.getenv('BROKER_HOST', default="localhost")
+        suscriptor = SuscriptorEventos(f'pulsar://{pulsar_host}:6650')
         
         suscriptor.suscribirse_a_topico(
             'comando_ingesta_imagenes',

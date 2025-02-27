@@ -1,5 +1,5 @@
 #this runs with python3 src/api/api.py from microservice root folder
-
+import os
 from io import BytesIO
 from flask import Flask, jsonify, request, send_file
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
@@ -39,7 +39,9 @@ def anonimizar_imagen():
     
         # llamar a publicadores para publicar evento
         try:
-            publicador = PublicadorEventos('pulsar://localhost:6650')
+            #TODO hacer refactoring
+            pulsar_host=os.getenv('BROKER_HOST', default="localhost")
+            publicador = PublicadorEventos(f'pulsar://{pulsar_host}:6650')
             evento = {
                 'evento': 'Imagen anonimizada',
                 'filename': file.filename,

@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass, field
 from src.seedwork.aplicacion.comandos import ejecutar_commando as comando
 from datetime import datetime
+import os
 
 @dataclass
 class IngestaImagen(Comando):
@@ -19,7 +20,8 @@ class IngestaImagen(Comando):
 
 class IngestaImagenHandler:
     def __init__(self):
-        self.client = pulsar.Client('pulsar://localhost:6650')
+        pulsar_host=os.getenv('BROKER_HOST', default="localhost")
+        self.client = pulsar.Client(f'pulsar://{pulsar_host}:6650') #TODO: ajustar logica conexion host
         self.producer = self.client.create_producer('comando_ingesta_imagenes')
 
     def handle(self, comando: IngestaImagen):
