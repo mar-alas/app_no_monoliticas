@@ -46,6 +46,12 @@ docker exec -it broker bin/pulsar-client consume persistent://public/default/eve
 docker exec -it broker bin/pulsar-client consume persistent://public/default/comando_ingesta_imagenes -s my-subscription -n 0
 ```
 
+para listar los topicos:
+```bash
+docker exec -it broker bin/pulsar-admin topics list public/default
+```
+
+
 o con el siguiente comando adentro del contenedor del broker:
 
 ```bash
