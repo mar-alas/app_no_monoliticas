@@ -7,3 +7,4 @@ data/*
 .venv/
 anonimizacion_imagenes/venv
 ingesta_imagenes/venv/
+ingesta_imagenes/.keys
