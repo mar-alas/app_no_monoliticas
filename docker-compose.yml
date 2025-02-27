@@ -65,6 +65,21 @@ services:
     depends_on:
       broker:
         condition: service_healthy
+  
+  ingesta_service:
+    build:
+      context: ./ingesta_imagenes
+      dockerfile: Dockerfile
+    container_name: ingesta_contenedor
+    networks:
+      - pulsar
+    environment:
+      - BROKER_HOST=broker
+    ports:
+      - "5000:5000"
+    depends_on:
+      broker:
+        condition: service_healthy
 
 volumes:
   postgres_data:
