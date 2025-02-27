@@ -14,13 +14,13 @@ mkdir -p ./data/bookkeeper
 chmod -R 777 ./data/bookkeeper
 ```
 
-### 2. Ejecutar contenedores
+### 2. Ejecutar contenedores Microservicio Autenticación y Pulsar
 
-Ejecute `docker-compose up` para correr todos los contenedores de Pulsar.
+Ejecute `docker-compose up` para correr todos los contenedores de Pulsar y el contenedor de el microservicio de Autenticación.
 
-### 3. Iniciar la aplicación
+### 3. Iniciar la aplicación del microservicio de anonimización de imagenes
 
-Inicie la ejecución de `app.py`. Use un ambiente virtual. Si hay problemas instalando, use:
+En la raiz del microservicio inicie la ejecución de `app.py`. Use un ambiente virtual. Si hay problemas instalando, use:
 
 ```bash
 pip install --upgrade --no-cache-dir "pip<24.1" setuptools wheel
@@ -32,10 +32,18 @@ Si necesita actualizar el `PYTHONPATH` para correr desde la raíz del repositori
 export PYTHONPATH=$(pwd)/anonimizacion_imagenes
 ```
 
+Para instrucciones mas detalladas ver el README del microservicio.
+
 ### 4. Ver el mensaje del evento
 
-Para ver el mensaje del evento, ejecute:
+Para ver el mensaje del evento, ejecute en su equipo (después de correr docker compose up):
 
 ```bash
-consume persistent://public/default/eventos-anonimizador -s my-subscription -n 0
+docker exec -it broker bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my-subscription -n 0
+```
+
+o con el siguiente comando adentro del contenedor del broker:
+
+```bash
+bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my-subscription -n 0
 ```

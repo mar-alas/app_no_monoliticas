@@ -8,14 +8,17 @@ from pydispatch import dispatcher
 from src.dominio.eventos import ImagenAnonimizada
 from datetime import datetime
 from uuid import uuid4
+from src.seedwork.aplicacion.autenticacion import token_required
 
 app = Flask(__name__)
 
 @app.route('/')
+@token_required
 def home():
     return jsonify(message="Welcome to the Flask app!")
 
 @app.route('/anonimizar-imagen', methods=['POST'])
+@token_required
 def anonimizar_imagen():
     try:
         if not ImagenDeAnonimizacionEsValida(request.files['image']).es_valido():
