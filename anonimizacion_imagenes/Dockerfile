@@ -1,5 +1,3 @@
-#build with docker build -t anonimizacion_imagenes_image .
-#run with docker run --rm --name anonimizacion_imagenes_container -p 5001:5001 anonimizacion_imagenes_image
 FROM python:3.10-slim
 
 # Install system dependencies
@@ -27,5 +25,5 @@ COPY . .
 EXPOSE 5001
 
 # Command to run the application
-#CMD ["python", "main.py"]
-CMD [ "flask", "run", "--host=0.0.0.0" ]
+CMD ["python", "app.py"]
+#CMD [ "flask", "run", "--host=0.0.0.0" ]
