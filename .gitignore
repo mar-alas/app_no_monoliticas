@@ -6,3 +6,4 @@ anonimizacion_imagenes/src/api/__pycache__/api.cpython-310.pyc
 data/*
 .venv/
 anonimizacion_imagenes/venv
+ingesta_imagenes/venv/
