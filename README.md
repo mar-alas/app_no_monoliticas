@@ -42,6 +42,10 @@ Para ver el mensaje del evento, ejecute en su equipo (después de correr docker 
 docker exec -it broker bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my-subscription -n 0
 ```
 
+```bash
+docker exec -it broker bin/pulsar-client consume persistent://public/default/comando_ingesta_imagenes -s my-subscription -n 0
+```
+
 o con el siguiente comando adentro del contenedor del broker:
 
 ```bash
