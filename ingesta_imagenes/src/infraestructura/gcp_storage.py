@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 # Set Credential
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'your_key_file.json'
-credentials_file = ".keys/appnomonoliticas-452202-89faeb7dcdbf.json"
+credentials_file = ".keys/appnomonoliticas.json"
 
 class GCPStorage:
     def __init__(self):
