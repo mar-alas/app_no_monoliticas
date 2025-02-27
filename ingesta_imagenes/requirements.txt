@@ -7,7 +7,6 @@ charset-normalizer==3.4.1
 click==8.1.8
 cryptography==44.0.1
 Cython==3.0.12
-easyocr==1.7.2
 fastavro==1.10.0
 filelock==3.17.0
 Flask==3.1.0
@@ -23,14 +22,12 @@ idna==3.10
 imageio==2.37.0
 itsdangerous==2.2.0
 Jinja2==3.1.5
-jwt==1.3.1
 lazy_loader==0.4
 MarkupSafe==3.0.2
 mpmath==1.3.0
 networkx==3.4.2
 ninja==1.11.1.3
 numpy==2.2.3
-opencv-python-headless==4.11.0.86
 packaging==24.2
 pillow==11.1.0
 proto-plus==1.26.0
@@ -52,9 +49,5 @@ setuptools==75.8.0
 shapely==2.0.7
 sympy==1.13.1
 tifffile==2025.2.18
-torch==2.6.0
-torchvision==0.21.0
 typing_extensions==4.12.2
 urllib3==2.3.0
-Werkzeug==3.1.3
-wheel==0.45.1
