@@ -7,6 +7,7 @@ import logging
 from src.infraestructura.gcp_storage import GCPStorage
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 import os
+from src.seedwork.infraestructura.utils import broker_host
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -40,9 +41,7 @@ def iniciar_suscriptor():
     """Inicializa y configura el suscriptor de eventos"""
     global suscriptor
     try:
-        logger.info("Iniciando suscriptor de eventos...")
-        #TODO hacer refactoring
-        pulsar_host=os.getenv('BROKER_HOST', default="localhost")
+        pulsar_host=broker_host()
         suscriptor = SuscriptorEventos(f'pulsar://{pulsar_host}:6650')
         
         suscriptor.suscribirse_a_topico(

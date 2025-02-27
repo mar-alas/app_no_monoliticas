@@ -6,6 +6,8 @@ from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 from src.infraestructura.publicadores import PublicadorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 from src.seedwork.aplicacion.autenticacion import token_required
+from src.seedwork.infraestructura.utils import broker_host
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -13,6 +15,7 @@ app = Flask(__name__)
 def home():
     return jsonify(message="Welcome to the Flask app!")
 
+#TODO quitar ruta
 @app.route('/anonimizar-imagen', methods=['POST'])
 @token_required
 def anonimizar_imagen():
@@ -34,13 +37,12 @@ def anonimizar_imagen():
             return jsonify(error="Invalid file type, only .jpg, .png, jpeg allowed"), 400
 
 
-        image_stream = BytesIO(image_data)
-        image_stream2 = servicio_anonimizar_imagen(image_stream)
+        image_stream_img_sin_anonimizar = BytesIO(image_data)
+        image_stream_img_anonimizada = servicio_anonimizar_imagen(image_stream_img_sin_anonimizar)
     
         # llamar a publicadores para publicar evento
         try:
-            #TODO hacer refactoring
-            pulsar_host=os.getenv('BROKER_HOST', default="localhost")
+            pulsar_host=broker_host()
             publicador = PublicadorEventos(f'pulsar://{pulsar_host}:6650')
             evento = {
                 'evento': 'Imagen anonimizada',
@@ -57,7 +59,7 @@ def anonimizar_imagen():
             print(f"Error al publicar evento: {str(e)}")
         
         return send_file(
-            image_stream2,
+            image_stream_img_anonimizada,
             mimetype="image/jpeg",  # Correct MIME type for JPEG images
             as_attachment=False,    # Set to True if you want to force download
             download_name=file.filename  # Optional: Set the filename for the response
