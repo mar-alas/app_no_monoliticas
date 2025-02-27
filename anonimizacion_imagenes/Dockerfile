@@ -1,6 +1,6 @@
 #build with docker build -t anonimizacion_imagenes_image .
-#run with docker run --rm --name anonimizacion_imagenes_container -p 5000:5000 anonimizacion_imagenes_image
-FROM python:3.8-slim
+#run with docker run --rm --name anonimizacion_imagenes_container -p 5001:5001 anonimizacion_imagenes_image
+FROM python:3.10-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
