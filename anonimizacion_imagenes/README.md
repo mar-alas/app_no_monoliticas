@@ -18,7 +18,12 @@ docker build -t anonimizacion_imagenes_image .
 ```
 3. Ejecutar el contenedor:
 ```bash
-docker run --rm --name anonimizacion_imagenes_container -p 5000:5000 anonimizacion_imagenes_image
+docker run --rm \
+    --name anonimizacion_imagenes_container \
+    --network app_no_monoliticas_pulsar \
+    -p 5001:5001 \
+    -e BROKER_HOST=broker \
+    anonimizacion_imagenes_image
 ```
 
 
