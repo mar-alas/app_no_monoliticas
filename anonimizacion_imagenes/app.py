@@ -9,6 +9,7 @@ import logging
 from src.infraestructura.gcp_storage import GCPStorage
 from src.seedwork.infraestructura.utils import broker_host
 from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_ingesta
+from src.aplicacion.comandos.rollback import rollback
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +31,13 @@ def iniciar_suscriptor():
             'anonimizacion-service-sub',
             procesar_comando_ingesta
         )
+
+        suscriptor.suscribirse_a_topico(
+            'comando_ingesta_imagenes_rollback',
+            'anonimizacion-service-rollback-sub',
+            rollback
+        )
+
         logger.info("Suscriptor iniciado correctamente")
     except Exception as e:
         logger.error(f"Error al iniciar suscriptor: {str(e)}")
