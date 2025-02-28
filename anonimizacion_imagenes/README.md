@@ -24,7 +24,11 @@ docker run --rm \
     -e BROKER_HOST=broker \
     anonimizacion_imagenes_image
 ```
+si desea probar la interaccion del componente con los demas puede correr en la raiz del repositorio este comando:
 
+```bash
+docker-compose --profile sin_anonimizacion up
+```
 
 ## Correr el servicio en su ambiente local
 Para ejecutar en modo desarrollo:

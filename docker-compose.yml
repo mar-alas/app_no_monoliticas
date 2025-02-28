@@ -6,6 +6,7 @@ services:
   broker:
     image: apachepulsar/pulsar:latest
     container_name: broker
+    profiles: ["sin_anonimizacion"]
     networks:
       - pulsar
     command: bin/pulsar standalone
@@ -21,6 +22,7 @@ services:
   user_db:
     image: postgres:15
     container_name: postgres_db
+    profiles: ["sin_anonimizacion"]
     restart: always
     environment:
       POSTGRES_USER: user
@@ -42,6 +44,7 @@ services:
       context: ./manejo_usuarios
       dockerfile: Dockerfile
     container_name: user_auth_service
+    profiles: ["sin_anonimizacion"]
     restart: always
     depends_on:
       user_db:
@@ -56,6 +59,7 @@ services:
       context: ./anonimizacion_imagenes
       dockerfile: Dockerfile
     container_name: anonimizacion_contenedor
+    profiles: ["anonimizacion"]
     networks:
       - pulsar
     environment:
@@ -71,6 +75,7 @@ services:
       context: ./ingesta_imagenes
       dockerfile: Dockerfile
     container_name: ingesta_contenedor
+    profiles: ["sin_anonimizacion"]
     networks:
       - pulsar
     environment:
