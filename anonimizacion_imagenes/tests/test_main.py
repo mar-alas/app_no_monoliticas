@@ -49,4 +49,3 @@ def test_anonimizar_route(client):
         )
 
     assert response.status_code == 200
-    assert response.mimetype == "image/jpeg"

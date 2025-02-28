@@ -20,50 +20,17 @@ def home():
 @token_required
 def anonimizar_imagen():
     try:
-        if not ImagenDeAnonimizacionEsValida(request.files['image']).es_valido():
-            return jsonify(error="La imagen de anonimizacion no es valida"), 400
 
         file = request.files['image']
         
         image_data = file.read()
-
-        if not TamanioDeImagenEsValido(len(image_data)).es_valido():
-            return jsonify(error="El tamaño de la imagen no es valido"), 400
-
-        if not NombreDeImagenNoPuedeSerVacio(file.filename).es_valido():
-            return jsonify(error="El nombre de la imagen no puede ser vacio"), 400
         
-        if not FormatoDeImagenEsValido(file.filename).es_valido():
-            return jsonify(error="Invalid file type, only .jpg, .png, jpeg allowed"), 400
-
-
         image_stream_img_sin_anonimizar = BytesIO(image_data)
-        image_stream_img_anonimizada = servicio_anonimizar_imagen(image_stream_img_sin_anonimizar)
-    
-        # llamar a publicadores para publicar evento
-        try:
-            pulsar_host=broker_host()
-            publicador = PublicadorEventos(f'pulsar://{pulsar_host}:6650')
-            evento = {
-                'evento': 'Imagen anonimizada',
-                'filename': file.filename,
-                'size': len(image_data)
-            }
-            publicador.publicar_evento(
-                'eventos-anonimizador',
-                str(evento)
-            )
-            publicador.cerrar()
-        except Exception as e:
-            # Log the error but continue with the response
-            print(f"Error al publicar evento: {str(e)}")
+
+        servicio_anonimizar_imagen(file.filename,image_stream_img_sin_anonimizar)
         
-        return send_file(
-            image_stream_img_anonimizada,
-            mimetype="image/jpeg",  # Correct MIME type for JPEG images
-            as_attachment=False,    # Set to True if you want to force download
-            download_name=file.filename  # Optional: Set the filename for the response
-        ) 
+        return jsonify(message="Imagen anonimizada correctamente"), 200
+    
     except Exception as e:
         return jsonify(error=f"Error inesperado: {str(e)}. Intente mas tarde.",), 500
     

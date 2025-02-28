@@ -31,7 +31,7 @@ def procesar_comando_ingesta(mensaje):
         proveedor=mensaje["proveedor"]
         nombre=id+"_"+filename
         stream_imagen_sin_anomizar= gCPStorage.descargar_imagen(nombre,proveedor)
-        stream_imagen_anonimizada=servicio_anonimizar_imagen(stream_imagen_sin_anomizar)
+        stream_imagen_anonimizada=servicio_anonimizar_imagen(nombre,stream_imagen_sin_anomizar)
         gCPStorage.subir_imagen('anonimizada_'+ nombre,stream_imagen_anonimizada,proveedor)
     except Exception as e:
         logger.error(f"Error procesando comando de ingesta: {str(e)}")
