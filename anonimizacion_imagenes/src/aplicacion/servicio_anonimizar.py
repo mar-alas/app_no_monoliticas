@@ -54,6 +54,7 @@ def servicio_anonimizar_imagen(image_name:str,binary_image:BytesIO)->BytesIO:
         _, buffer = cv2.imencode('.jpeg', inpainted_image)
         binary_image_data = BytesIO(buffer)
 
+        #TODO mejorar implementacion de publicacion de eventos
         pulsar_host=broker_host()
         publicador = PublicadorEventos(f'pulsar://{pulsar_host}:6650')
         evento = {

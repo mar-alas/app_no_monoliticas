@@ -10,6 +10,9 @@ from src.infraestructura.gcp_storage import GCPStorage
 from src.seedwork.infraestructura.utils import broker_host
 from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_ingesta
 from src.aplicacion.comandos.rollback import rollback
+from src.config.db import init_db, database_connection
+import os
+import psycopg2
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -42,6 +45,24 @@ def iniciar_suscriptor():
     except Exception as e:
         logger.error(f"Error al iniciar suscriptor: {str(e)}")
 
+def inicializar_db(app):
+    """Inicializa la base de datos y crea las tablas necesarias"""
+    try:
+        with app.app_context():
+            logger.info("Creando tablas en la base de datos...")
+            from src.infraestructura.dto import ImagenAnonimizada
+            from src.config.db import db
+            db.create_all()
+            logger.info("Tablas creadas correctamente")
+    except Exception as e:
+        logger.error(f"Error al crear tablas en la base de datos: {str(e)}")
+
+
 if __name__ == "__main__":
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_connection({}, basedir=basedir)
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    init_db(app)
+    inicializar_db(app)
     iniciar_suscriptor()
     app.run(debug=True,port=5001)

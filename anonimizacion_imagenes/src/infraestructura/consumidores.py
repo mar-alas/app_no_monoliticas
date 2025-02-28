@@ -26,3 +26,5 @@ async def suscribirse_a_topico(topico: str, suscripcion: str, schema: Record, ti
     except:
         logging.error('ERROR: Suscribiendose al tópico de eventos!')
         traceback.print_exc()
+
+

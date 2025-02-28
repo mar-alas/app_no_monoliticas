@@ -52,6 +52,22 @@ Sobre la raiz del microservicio correr
 ```bash
 pytest
 ```
+## Consultas a base de datos
+
+```bash
+docker exec -it anonimizacion_db psql -U user -d anonimizacion_db -c "\dt"
+```
+
+
+crear base de datos de prueba
+```bash
+docker exec -it anonimizacion_db psql -U user -d anonimizacion_db -c "CREATE TABLE test (id SERIAL PRIMARY KEY, name VARCHAR(50));"
+```
+
+consultar todas las filas de una tabla específica
+```bash
+docker exec -it anonimizacion_db psql -U user -d anonimizacion_db -c "SELECT * FROM imagen_anonimizada;"
+```
 
 
 
