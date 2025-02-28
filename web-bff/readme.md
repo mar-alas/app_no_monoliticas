@@ -1,5 +1,4 @@
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/51ba093d-8883-407d-b6ea-f5df6262592b" /># BFF (Backend for Frontend) con Flask y Docker
-
+# BFF (Backend for Frontend) con Flask y Docker
 Este proyecto implementa un Backend for Frontend (BFF) en Python usando Flask, con endpoints separados para web y mobile. 
 
 ## 📌 Estructura del Proyecto
