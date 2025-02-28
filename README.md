@@ -5,38 +5,15 @@ Curso diseño de aplicaciones no monolíticas
 
 ### 1. Configuración del repositorio
 
-Asegúrese de tener esto en el repositorio con `sudo`:
-
-```bash
-mkdir -p ./data/zookeeper
-chmod -R 777 ./data/zookeeper
-mkdir -p ./data/bookkeeper
-chmod -R 777 ./data/bookkeeper
-```
+Asegúrese de tener en las carpetas "anonimizacion_imagenes" y "ingesta_imagenes" una subcarpeta ".keys" con el archivo de credenciales para GCP adentro. Este debe tener nombre "appnomonoliticas.json". Este archivo se descarga de GCP desde IAM.
 
 ### 2. Ejecutar contenedores Microservicio Autenticación y Pulsar
 
-Ejecute `docker-compose up` para correr todos los contenedores de Pulsar y el contenedor de el microservicio de Autenticación.
+Ejecute `docker-compose up` para correr todos los contenedores de Pulsar, microservicio de Autenticación, microservicio anonimizacion y microservicio ingesta de imagenes.
 
-### 3. Iniciar la aplicación del microservicio de anonimización de imagenes
+### 3. Ver el mensaje del evento
 
-En la raiz del microservicio inicie la ejecución de `app.py`. Use un ambiente virtual. Si hay problemas instalando, use:
-
-```bash
-pip install --upgrade --no-cache-dir "pip<24.1" setuptools wheel
-```
-
-Si necesita actualizar el `PYTHONPATH` para correr desde la raíz del repositorio:
-
-```bash
-export PYTHONPATH=$(pwd)/anonimizacion_imagenes
-```
-
-Para instrucciones mas detalladas ver el README del microservicio.
-
-### 4. Ver el mensaje del evento
-
-Para ver el mensaje del evento, ejecute en su equipo (después de correr docker compose up):
+Para ver los mensaje de los topicos, ejecute en su equipo (después de correr docker compose up):
 
 ```bash
 docker exec -it broker bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my-subscription -n 0

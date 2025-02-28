@@ -10,13 +10,12 @@ Este microservicio se encarga de procesar y anonimizar imágenes, eliminando inf
 - Flask/FastAPI
 - Docker
 
-## Instalación y Configuración
-1. Clonar el repositorio
-2. Construir la imagen Docker:
+## Correr el contenedor de forma individual
+1. Construir la imagen Docker:
 ```bash
 docker build -t anonimizacion_imagenes_image .
 ```
-3. Ejecutar el contenedor:
+2. Ejecutar el contenedor:
 ```bash
 docker run --rm \
     --name anonimizacion_imagenes_container \
@@ -27,7 +26,7 @@ docker run --rm \
 ```
 
 
-## Desarrollo
+## Correr el servicio en su ambiente local
 Para ejecutar en modo desarrollo:
 ```bash
 python -m venv venv
@@ -43,7 +42,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 python3 app.py
 ```
-## Pruebas
+## Pruebas unitarias
 Sobre la raiz del microservicio correr 
 
 ```bash
