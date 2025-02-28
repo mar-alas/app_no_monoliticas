@@ -7,7 +7,7 @@ Este proyecto implementa un Backend for Frontend (BFF) en Python usando Flask, c
 📂 public-bff
  ├── 📂 src
  │   ├── 📂 api/v1
- │   │   ├── puiblic_controller.py
+ │   │   ├── public_controller.py
  │   ├── 📂 services
  │   │   ├── ping_service.py
  │   ├── main.py
