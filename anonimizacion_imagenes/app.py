@@ -1,12 +1,12 @@
+
 from src.api.api import app
+from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 from src.infraestructura.publicadores import PublicadorEventos
 from src.infraestructura.suscriptores import SuscriptorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 from src.seedwork.aplicacion.autenticacion import token_required
 import logging
 from src.infraestructura.gcp_storage import GCPStorage
-from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
-import os
 from src.seedwork.infraestructura.utils import broker_host
 
 # Configurar logging

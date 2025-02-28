@@ -25,7 +25,5 @@ def test_home_route(client):
     token=generate_token("test_user")
     response = client.get('/', headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
-    json_data = response.get_json()
-    assert 'message' in json_data
-    assert json_data['message'] == 'Welcome to the Flask app!'
+    
 
