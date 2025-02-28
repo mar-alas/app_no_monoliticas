@@ -1,4 +1,4 @@
-# BFF (Backend for Frontend) con Flask y Docker
+# BFF Mobile (Backend for Mobile)
 
 Este proyecto implementa un Backend for Frontend (BFF) en Python usando Flask, con endpoints separados para web y mobile. 
 
