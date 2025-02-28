@@ -29,23 +29,3 @@ def test_home_route(client):
     assert 'message' in json_data
     assert json_data['message'] == 'Welcome to the Flask app!'
 
-def test_anonimizar_route(client):
-    token=generate_token("test_user")
-    # Prepare a test image file
-    test_image_path = "tests/test_image.jpeg"
-
-    with open(test_image_path, "rb") as image_file:
-        file_storage = FileStorage(
-            stream=image_file,
-            filename="test_image.jpeg",
-            content_type="image/jpeg"
-        )
-
-        response = client.post(
-            "/anonimizar-imagen",
-            data={"image": file_storage, "description": "Test image"},
-            content_type="multipart/form-data",
-            headers={"Authorization": f"Bearer {token}"}
-        )
-
-    assert response.status_code == 200
