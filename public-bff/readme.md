@@ -17,6 +17,10 @@ Este proyecto implementa un Backend for Frontend (BFF) en Python usando Flask, c
  ├── readme.md
 ```
 
+## Como hace parte de la arquitectura?
+<img width="902" alt="image" src="https://github.com/user-attachments/assets/1af19c43-4e20-46a3-ad70-f5ddc6c792c1" />
+
+
 ## 🚀 Instalación y configuración
 
 ### 1️⃣ Clonar el repositorio
