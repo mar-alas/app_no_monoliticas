@@ -8,6 +8,8 @@ from src.seedwork.aplicacion.autenticacion import token_required
 import logging
 from src.infraestructura.gcp_storage import GCPStorage
 from src.seedwork.infraestructura.utils import broker_host
+from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_ingesta
+from src.aplicacion.comandos.rollback import rollback
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -15,26 +17,6 @@ logger = logging.getLogger(__name__)
 
 # Instancia global del suscriptor
 suscriptor = None
-
-def procesar_comando_ingesta(mensaje):
-    """
-    Procesa los comandos de ingesta de imágenes recibidos del tópico
-    
-    Args:
-        mensaje: Diccionario con la información del comando
-    """
-    try:
-        logger.info(f"Comando de ingesta recibido: {mensaje}")
-        gCPStorage=GCPStorage()
-        id=mensaje["id"]
-        filename=mensaje["filename"]
-        proveedor=mensaje["proveedor"]
-        nombre=id+"_"+filename
-        stream_imagen_sin_anomizar= gCPStorage.descargar_imagen(nombre,proveedor)
-        stream_imagen_anonimizada=servicio_anonimizar_imagen(nombre,stream_imagen_sin_anomizar)
-        gCPStorage.subir_imagen('anonimizada_'+ nombre,stream_imagen_anonimizada,proveedor)
-    except Exception as e:
-        logger.error(f"Error procesando comando de ingesta: {str(e)}")
 
 
 def iniciar_suscriptor():
@@ -49,6 +31,13 @@ def iniciar_suscriptor():
             'anonimizacion-service-sub',
             procesar_comando_ingesta
         )
+
+        suscriptor.suscribirse_a_topico(
+            'comando_ingesta_imagenes_rollback',
+            'anonimizacion-service-rollback-sub',
+            rollback
+        )
+
         logger.info("Suscriptor iniciado correctamente")
     except Exception as e:
         logger.error(f"Error al iniciar suscriptor: {str(e)}")

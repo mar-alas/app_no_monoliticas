@@ -34,3 +34,8 @@ o con el siguiente comando adentro del contenedor del broker:
 ```bash
 bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my-subscription -n 0
 ```
+
+con el siguiente comando se puede mandar un mensaje de prueba a un topico:
+```bash
+docker exec -it broker bin/pulsar-client produce persistent://public/default/comando_ingesta_imagenes_rollback -m "{hacer rollback}
+```
