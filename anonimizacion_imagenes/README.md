@@ -19,9 +19,11 @@ docker build -t anonimizacion_imagenes_image .
 ```bash
 docker run --rm \
     --name anonimizacion_imagenes_container \
-    --network app_no_monoliticas_pulsar \
+    --network app_no_monoliticas_default \
     -p 5001:5001 \
     -e BROKER_HOST=broker \
+    -e DB_HOSTNAME=anonimizacion_db \
+    -e DB_PORT=5432 \
     anonimizacion_imagenes_image
 ```
 si desea probar la interaccion del componente con los demas puede correr en la raiz del repositorio este comando:

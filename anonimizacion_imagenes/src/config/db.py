@@ -8,6 +8,7 @@ db = SQLAlchemy()
 DB_USERNAME = os.getenv('DB_USERNAME', default="user")
 DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
 DB_HOSTNAME = os.getenv('DB_HOSTNAME', default="localhost")
+DB_PORT = os.getenv('DB_PORT', default="9001")
 
 class DatabaseConfigException(Exception):
     def __init__(self, message='Configuration file is Null or malformed'):
@@ -23,7 +24,7 @@ def database_connection(config, basedir=os.path.abspath(os.path.dirname(__file__
         return f'sqlite:///{os.path.join(basedir, "database.db")}'
     else:
         #TODO revisar configuracion puerto por variable de entorno
-        return f'postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:9001/anonimizacion_db'
+        return f'postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/anonimizacion_db'
 
 
 def init_db(app: Flask):

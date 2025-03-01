@@ -3,8 +3,8 @@
 from src.api.api import app
 
 #si se borran estos paquetes causan conflicto al correr app
-import cv2
-import easyocr
+#import cv2
+#import easyocr
 import numpy as np
 
 
@@ -18,7 +18,6 @@ from src.seedwork.infraestructura.utils import broker_host
 from src.config.db import init_db, database_connection
 from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_ingesta
 from src.aplicacion.comandos.rollback import rollback
-from src.infraestructura.dto import ImagenAnonimizada as ImagenAnonimizadaDTO
 import os
 import psycopg2
 
@@ -73,4 +72,4 @@ if __name__ == "__main__":
     init_db(app)
     inicializar_db(app)
     iniciar_suscriptor()
-    app.run(debug=True,port=5001)
+    app.run(host="0.0.0.0",port=5001,debug=True)

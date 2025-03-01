@@ -4,15 +4,30 @@ En este archivo usted encontrará los DTOs (modelos anémicos) de
 la infraestructura de la anonimizacion de imagenes
 
 """
-from src.config.db import db
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, ForeignKey, Integer, Table
+from sqlalchemy import Column, String, DateTime, func
+from sqlalchemy.ext.declarative import declarative_base
 import uuid
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import os
 
-Base = db.declarative_base()
+# Define the database connection
+DB_USERNAME = os.getenv('DB_USERNAME', default="user")
+DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
+DB_HOSTNAME = os.getenv('DB_HOSTNAME', default="localhost")
+DB_PORT = os.getenv('DB_PORT', default="9001")
+DATABASE_URL = f'postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/anonimizacion_db'
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
 
-class ImagenAnonimizada(db.Model):
+Base = declarative_base()
+
+
+class ImagenAnonimizada(Base):
     __tablename__ = "imagen_anonimizada"
-    id = db.Column(db.String(40), primary_key=True, default=lambda: str(uuid.uuid4()))
-    fileName = db.Column(db.String(40), nullable=False)
-    fecha_creacion = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    id = Column(String(40), primary_key=True, default=lambda: str(uuid.uuid4()))
+    fileName = Column(String(80), nullable=False)
+    fecha_creacion = Column(DateTime, nullable=False, default=func.current_timestamp())
+
+Base.metadata.create_all(engine)

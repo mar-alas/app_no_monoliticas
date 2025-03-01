@@ -1,14 +1,14 @@
 networks:
   pulsar:
     driver: bridge
+  anonimizacion:
+    driver: bridge
 
 services:
   broker:
     image: apachepulsar/pulsar:latest
     container_name: broker
-    profiles: ["sin_anonimizacion"]
-    networks:
-      - pulsar
+    profiles: ["sin_anonimizacion",""]
     command: bin/pulsar standalone
     ports:
       - "6650:6650"
@@ -22,7 +22,7 @@ services:
   user_db:
     image: postgres:15
     container_name: postgres_db
-    profiles: ["sin_anonimizacion"]
+    profiles: ["sin_anonimizacion",""]
     restart: always
     environment:
       POSTGRES_USER: user
@@ -44,7 +44,7 @@ services:
       context: ./manejo_usuarios
       dockerfile: Dockerfile
     container_name: user_auth_service
-    profiles: ["sin_anonimizacion"]
+    profiles: ["sin_anonimizacion",""]
     restart: always
     depends_on:
       user_db:
@@ -59,11 +59,11 @@ services:
       context: ./anonimizacion_imagenes
       dockerfile: Dockerfile
     container_name: anonimizacion_contenedor
-    profiles: ["anonimizacion"]
-    networks:
-      - pulsar
+    profiles: ["anonimizacion",""]
     environment:
       - BROKER_HOST=broker
+      - DB_HOSTNAME=anonimizacion_db
+      - DB_PORT=5432
     ports:
       - "5001:5001"
     depends_on:
@@ -74,7 +74,7 @@ services:
   anonimizacion_db:
     image: postgres:15
     container_name: anonimizacion_db
-    profiles: ["sin_anonimizacion"]
+    profiles: ["sin_anonimizacion",""]
     restart: always
     environment:
       POSTGRES_USER: user
@@ -93,9 +93,7 @@ services:
       context: ./ingesta_imagenes
       dockerfile: Dockerfile
     container_name: ingesta_contenedor
-    profiles: ["sin_anonimizacion"]
-    networks:
-      - pulsar
+    profiles: ["sin_anonimizacion",""]
     environment:
       - BROKER_HOST=broker
     ports:
