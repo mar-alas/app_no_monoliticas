@@ -13,7 +13,7 @@ from src.infraestructura.respositorios import RepositorioImagenesAnonimizadasSQL
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def servicio_anonimizar_imagen(image_name:str,binary_image:BytesIO)->BytesIO:
+def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:str,binary_image:BytesIO)->BytesIO:
     try:
         if not ImagenDeAnonimizacionEsValida(binary_image).es_valido():
             raise ValueError("Imagén de anonimización no válida")
@@ -21,10 +21,10 @@ def servicio_anonimizar_imagen(image_name:str,binary_image:BytesIO)->BytesIO:
         if not TamanioDeImagenEsValido(len(binary_image.getbuffer())).es_valido():
             raise ValueError("El tamaño de la imagen no es válido")
 
-        if not NombreDeImagenNoPuedeSerVacio(image_name).es_valido():
+        if not NombreDeImagenNoPuedeSerVacio(nombre_imagen_origen).es_valido():
             raise ValueError("El nombre de la imagen no puede ser vacio")
 
-        if not FormatoDeImagenEsValido(image_name).es_valido():
+        if not FormatoDeImagenEsValido(nombre_imagen_origen).es_valido():
             raise ValueError("El formato de la imagen no es valido")
         
         # Load the image
@@ -62,7 +62,7 @@ def servicio_anonimizar_imagen(image_name:str,binary_image:BytesIO)->BytesIO:
         publicador = PublicadorEventos(f'pulsar://{pulsar_host}:6650')
         evento = {
             'evento': 'Imagen anonimizada',
-            'filename': image_name,
+            'filename': nombre_imagen_origen,
             'size': binary_image_data.getbuffer().nbytes
         }
         publicador.publicar_evento(
@@ -72,7 +72,9 @@ def servicio_anonimizar_imagen(image_name:str,binary_image:BytesIO)->BytesIO:
         publicador.cerrar()
 
         imagen_dto = ImagenAnonimizadaDTO(
-            fileName=image_name
+            nombre_imagen_origen=nombre_imagen_origen
+            ,nombre_imagen_destino=nombre_imagen_destino
+            ,tamanio_archivo=binary_image_data.getbuffer().nbytes
         )
         repositorio_imagenes = RepositorioImagenesAnonimizadasSQLAlchemy()
         repositorio_imagenes.almacenar_info_imagen_anonimizada(imagen_dto)

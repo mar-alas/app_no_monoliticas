@@ -5,7 +5,7 @@ la infraestructura de la anonimizacion de imagenes
 
 """
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, String, DateTime, func
+from sqlalchemy import Column, String, DateTime, func,Integer
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 from sqlalchemy import create_engine
@@ -27,7 +27,9 @@ Base = declarative_base()
 class ImagenAnonimizada(Base):
     __tablename__ = "imagen_anonimizada"
     id = Column(String(40), primary_key=True, default=lambda: str(uuid.uuid4()))
-    fileName = Column(String(80), nullable=False)
+    nombre_imagen_origen = Column(String(80), nullable=False)
+    nombre_imagen_destino = Column(String(80), nullable=False)
+    tamanio_archivo=Column(Integer, nullable=False)
     fecha_creacion = Column(DateTime, nullable=False, default=func.current_timestamp())
 
 Base.metadata.create_all(engine)
