@@ -49,6 +49,10 @@ def login():
         "token": token
     })
 
+@auth_blueprint.route("/ping", methods=["GET"])
+def ping():
+        return jsonify({"message": "pong"})
+
 @auth_blueprint.route("/profile", methods=["GET"])
 @token_required
 def profile(user_id):
