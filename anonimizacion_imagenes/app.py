@@ -1,6 +1,13 @@
 
+
 from src.api.api import app
-from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
+
+#si se borran estos paquetes causan conflicto al correr app
+import cv2
+import easyocr
+import numpy as np
+
+
 from src.infraestructura.publicadores import PublicadorEventos
 from src.infraestructura.suscriptores import SuscriptorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
@@ -8,9 +15,10 @@ from src.seedwork.aplicacion.autenticacion import token_required
 import logging
 from src.infraestructura.gcp_storage import GCPStorage
 from src.seedwork.infraestructura.utils import broker_host
+from src.config.db import init_db, database_connection
 from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_ingesta
 from src.aplicacion.comandos.rollback import rollback
-from src.config.db import init_db, database_connection
+from src.infraestructura.dto import ImagenAnonimizada as ImagenAnonimizadaDTO
 import os
 import psycopg2
 

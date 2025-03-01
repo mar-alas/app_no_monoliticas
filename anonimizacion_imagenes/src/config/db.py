@@ -2,7 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 import os
 
-db = None
+db = SQLAlchemy()
+
 #TODO configurar variables de entorno en docker compose y readme
 DB_USERNAME = os.getenv('DB_USERNAME', default="user")
 DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")

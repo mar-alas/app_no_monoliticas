@@ -7,6 +7,8 @@ from src.infraestructura.publicadores import PublicadorEventos
 from src.seedwork.infraestructura.utils import broker_host
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 import logging
+from src.infraestructura.dto import ImagenAnonimizada as ImagenAnonimizadaDTO
+from src.infraestructura.respositorios import RepositorioImagenesAnonimizadasSQLAlchemy
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
