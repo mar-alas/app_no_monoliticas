@@ -16,7 +16,7 @@ import logging
 from src.infraestructura.gcp_storage import GCPStorage
 from src.seedwork.infraestructura.utils import broker_host
 from src.config.db import init_db, database_connection
-from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_ingesta
+from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_anonimizacion
 from src.aplicacion.comandos.rollback import rollback
 import os
 import psycopg2
@@ -37,13 +37,13 @@ def iniciar_suscriptor():
         suscriptor = SuscriptorEventos(f'pulsar://{pulsar_host}:6650')
         
         suscriptor.suscribirse_a_topico(
-            'comando_ingesta_imagenes',
+            'comando_anonimizacion_imagenes',
             'anonimizacion-service-sub',
-            procesar_comando_ingesta
+            procesar_comando_anonimizacion
         )
 
         suscriptor.suscribirse_a_topico(
-            'comando_ingesta_imagenes_rollback',
+            'comando_anonimizacion_imagenes_rollback',
             'anonimizacion-service-rollback-sub',
             rollback
         )

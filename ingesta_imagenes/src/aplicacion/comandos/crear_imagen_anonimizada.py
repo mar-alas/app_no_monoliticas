@@ -23,7 +23,7 @@ class IngestaImagenHandler:
     def __init__(self):
         pulsar_host=broker_host()
         self.client = pulsar.Client(f'pulsar://{pulsar_host}:6650')
-        self.producer = self.client.create_producer('comando_ingesta_imagenes')
+        self.producer = self.client.create_producer('comando_anonimizacion_imagenes')
 
     def handle(self, comando: IngestaImagen):
         reserva_dto = IngestaImagenDTO(

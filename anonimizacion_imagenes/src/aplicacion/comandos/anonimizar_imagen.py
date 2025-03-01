@@ -6,9 +6,9 @@ from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def procesar_comando_ingesta(mensaje: dict):
+def procesar_comando_anonimizacion(mensaje: dict):
     """
-    Procesa los comandos de ingesta de imágenes recibidos del tópico
+    Procesa los comandos de anonimizacion recibidos del tópico
     
     Args:
         mensaje: Diccionario con la información del comando
