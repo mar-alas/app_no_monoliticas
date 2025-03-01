@@ -5,7 +5,9 @@ class ImagenAnonimizadaPayload(Record):
     id_imagen = String()
     filename = String()
     size = String()
-    fecha_creacion = Long()
+    fecha_creacion = String()
 
 class ImagenAnonimizada(EventoIntegracion):
+    service_name = String(default="anonimizacion_imagenes")
+    specversion = String(default="v1")
     data = ImagenAnonimizadaPayload()

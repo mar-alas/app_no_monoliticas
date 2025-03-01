@@ -9,6 +9,8 @@ from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenN
 import logging
 from src.infraestructura.dto import ImagenAnonimizada as ImagenAnonimizadaDTO
 from src.infraestructura.respositorios import RepositorioImagenesAnonimizadasSQLAlchemy
+from src.infraestructura.despachadores import Despachador
+from src.infraestructura.schema.v1.eventos import  ImagenAnonimizadaPayload
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,18 +60,15 @@ def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:st
         binary_image_data=binary_image
 
         #TODO mejorar implementacion de publicacion de eventos
-        pulsar_host=broker_host()
-        publicador = PublicadorEventos(f'pulsar://{pulsar_host}:6650')
-        evento = {
-            'evento': 'Imagen anonimizada',
-            'filename': nombre_imagen_origen,
-            'size': binary_image_data.getbuffer().nbytes
-        }
-        publicador.publicar_evento(
-            'eventos-anonimizador',
-            str(evento)
+        despachador = Despachador()
+        evento=ImagenAnonimizadaPayload(
+            id_imagen="1",
+            filename=nombre_imagen_origen,
+            size=str(binary_image_data.getbuffer().nbytes),
+            fecha_creacion="2021-08-01"
         )
-        publicador.cerrar()
+        despachador.publicar_evento(evento,"eventos-anonimizador")
+
 
         imagen_dto = ImagenAnonimizadaDTO(
             nombre_imagen_origen=nombre_imagen_origen

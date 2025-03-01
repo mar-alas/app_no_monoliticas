@@ -18,12 +18,7 @@ class Despachador:
         publicador.send(mensaje)
         cliente.close()
 
-    def publicar_evento(self, evento, topico):
-        payload = ImagenAnonimizadaPayload(
-            id_imagen=str(evento.id_imagen),
-            filename=str(evento.filename),
-            size=str(evento.filename),
-            fecha_creacion=int(unix_time_millis(evento.fecha_creacion))
-        )
+    def publicar_evento(self, evento:ImagenAnonimizadaPayload, topico):
+        payload = evento
         evento_integracion = ImagenAnonimizada(data=payload)
         self._publicar_mensaje(evento_integracion, topico, AvroSchema(ImagenAnonimizada))
