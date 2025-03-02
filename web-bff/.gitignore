@@ -1,0 +1,45 @@
+# Entorno virtual
+venv/
+.env
+
+# Archivos de configuración de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de logs
+logs/
+*.log
+
+# Dependencias
+*.egg-info/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Configuración de IDEs
+.vscode/
+.idea/
+*.iml
+
+# Docker
+*.dockerignore
+docker-compose.override.yml
+
+# Archivos de compilación y caché
+build/
+dist/
+
+# Base de datos SQLite
+*.sqlite3
+*.db
+
+# Archivos de cobertura de pruebas
+.coverage
+htmlcov/
+.cache
+.pytest_cache/
+
+# Otros
+.DS_Store
+Thumbs.db

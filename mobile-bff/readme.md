@@ -1,14 +1,13 @@
-# BFF (Backend for Frontend) con Flask y Docker
+# BFF Mobile (Backend for Mobile)
 
 Este proyecto implementa un Backend for Frontend (BFF) en Python usando Flask, con endpoints separados para web y mobile. 
 
 ## 📌 Estructura del Proyecto
 ```
-📂 backend-for-frontend
+📂 mobile-bff
  ├── 📂 src
  │   ├── 📂 api/v1
  │   │   ├── mobile_controller.py
- │   │   ├── web_controller.py
  │   ├── 📂 services
  │   │   ├── ping_service.py
  │   ├── main.py
@@ -17,6 +16,10 @@ Este proyecto implementa un Backend for Frontend (BFF) en Python usando Flask, c
  ├── Dockerfile
  ├── readme.md
 ```
+
+## Como hace parte de la arquitectura?
+<img width="918" alt="image" src="https://github.com/user-attachments/assets/94426fba-c20a-49ce-84db-aa01b63772ec" />
+
 
 ## 🚀 Instalación y configuración
 
@@ -48,25 +51,18 @@ python src/main.py
 
 ### 1️⃣ Construir la imagen Docker
 ```bash
-docker build -t bff .
+docker build -t mobile-bff .
 ```
 
 ### 2️⃣ Ejecutar el contenedor
 ```bash
-docker run -p 3001:3001 bff
+docker run -p 3003:3003 mobile-bff
 ```
 
 ## 📡 Pruebas con cURL
 
-### 🔹 Probar el servicio web
+### 🔹 Probar el servicio de ping
 ```bash
 curl --request GET \
-  --url http://localhost:3001/bff/web/v1/ping
+  --url http://localhost:3003/bff/mobile/v1/ping
 ```
-
-### 🔹 Probar el servicio mobile
-```bash
-curl --request GET \
-  --url http://localhost:3001/bff/mobile/v1/ping
-```
-
