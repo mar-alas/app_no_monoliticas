@@ -9,7 +9,7 @@ import numpy as np
 
 
 from src.infraestructura.publicadores import PublicadorEventos
-from src.infraestructura.suscriptores import SuscriptorEventos
+from src.infraestructura.consumidores import SuscriptorEventos
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 from src.seedwork.aplicacion.autenticacion import token_required
 import logging
