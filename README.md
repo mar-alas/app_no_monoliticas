@@ -20,7 +20,21 @@ Escogimos una topología de base de datos descentralizada. Cada microservicio ti
     * Desarrollo del microservicio de autenticacción
     * Despliegue en Kubernetes de la solución
 
+## Estructura carpetas
 
+```
+.
+├── README.md
+├── docker-compose.yml: Archivo para correr microservicios en docker
+├── Saludtech Microservicios.postman_collection.json: coleccion de postman
+├── anonimizacion_imagenes: microservicio de anonimizacion de imagenes
+├── ingesta_imagenes: microservicio de ingesta de imagenes
+├── manejo_usuarios: microservicio de ingesta de gestión de usuario
+├── repositorio_local: Imagenes de prueba en local
+├── mobile-bff: Backend for Frontend para usuarios mobile
+├── public-bff: Backend for Frontend para usuarios en general
+└── web-bff: Backend for Frontend para usuarios web deskop
+```
 ## Instrucciones
 
 ### 1. Configuración del repositorio
