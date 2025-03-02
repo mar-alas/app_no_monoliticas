@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingesta
+  labels:
+    app: ingesta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingesta
+  template:
+    metadata:
+      labels:
+        app: ingesta
+    spec:
+      containers:
+        - name: ingesta
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/ingesta:1.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: BROKER_HOST
+              value: "pulsar"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/var/secrets/google/key.json"
+          volumeMounts:
+            - name: gcp-credentials
+              mountPath: /var/secrets/google
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "400m"
+          readinessProbe:
+            httpGet:
+              path: /ingesta-imagen/ping
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /ingesta-imagen/ping
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+      volumes:
+        - name: gcp-credentials
+          secret:
+            secretName: gcp-credentials
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ingesta-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 5000
+    type: HTTP
+    requestPath: /ingesta-imagen/ping
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ingesta-service
+  annotations:
+    cloud.google.com/backend-config: '{"default": "ingesta-config"}'
+spec:
+  type: NodePort
+  selector:
+    app: ingesta
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      nodePort: 30002

@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY src /app/src
 COPY requirements.txt /app
-COPY .keys /app/.keys
+# COPY .keys /app/.keys
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade --no-cache-dir "pip<24.1" setuptools wheel

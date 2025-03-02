@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff
+  labels:
+    app: bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  template:
+    metadata:
+      labels:
+        app: bff
+    spec:
+      containers:
+        - name: bff
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:1.0
+          ports:
+            - containerPort: 3001
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          readinessProbe:
+            httpGet:
+              path: /bff/web/v1/ping
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /bff/web/v1/ping
+              port: 3001
+            initialDelaySeconds: 15
+            periodSeconds: 30
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: bff-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 3001
+    type: HTTP
+    requestPath: /bff/web/v1/ping
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: bff-service
+  annotations:
+    cloud.google.com/backend-config: '{"default": "bff-config"}'
+spec:
+  type: NodePort
+  selector:
+    app: bff
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3001
+      nodePort: 30003

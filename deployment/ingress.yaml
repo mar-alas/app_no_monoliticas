@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  labels:
+    name: gateway-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /auth
+        backend:
+          service:
+            name: servicio-manejo-usuarios
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: anonimizacion-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /ingesta-imagen
+        backend:
+          service:
+            name: ingesta-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /pulsar
+        backend:
+          service:
+            name: pulsar
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /bff/mobile
+        backend:
+          service:
+            name: mobile-bff-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /bff/public
+        backend:
+          service:
+            name: public-bff-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /bff/web
+        backend:
+          service:
+            name: web-bff-service
+            port:
+              number: 80
