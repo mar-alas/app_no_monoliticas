@@ -36,3 +36,10 @@ spec:
             name: pulsar
             port:
               number: 8080
+      - pathType: Prefix
+        path: /bff
+        backend:
+          service:
+            name: bff-service
+            port:
+              number: 80
