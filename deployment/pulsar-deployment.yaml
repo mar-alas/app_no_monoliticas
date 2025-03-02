@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pulsar
+  labels:
+    app: pulsar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pulsar
+  template:
+    metadata:
+      labels:
+        app: pulsar
+    spec:
+      containers:
+        - name: broker
+          image: apachepulsar/pulsar:2.10.2
+          command: 
+            - "bin/pulsar"
+            - "standalone"
+            - "--no-functions-worker"
+            - "--no-stream-storage"
+            - "--bookkeeper-dir"
+            - "/tmp/bookkeeper"
+          ports:
+            - containerPort: 6650
+              name: broker
+            - containerPort: 8080
+              name: admin
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          readinessProbe:
+            tcpSocket:
+              port: 6650
+            initialDelaySeconds: 120
+            periodSeconds: 60
+          livenessProbe:
+            tcpSocket:
+              port: 6650
+            initialDelaySeconds: 180
+            periodSeconds: 60
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pulsar
+spec:
+  type: ClusterIP
+  selector:
+    app: pulsar
+  ports:
+    - name: broker
+      port: 6650
+      targetPort: broker
+    - name: admin
+      port: 8080
+      targetPort: admin
