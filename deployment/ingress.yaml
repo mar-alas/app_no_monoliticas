@@ -29,3 +29,10 @@ spec:
             name: ingesta-service
             port:
               number: 80
+      - pathType: Prefix
+        path: /pulsar
+        backend:
+          service:
+            name: pulsar
+            port:
+              number: 8080
