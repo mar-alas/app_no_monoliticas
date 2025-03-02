@@ -1,5 +1,25 @@
-# app_no_monoliticas
-Curso diseño de aplicaciones no monolíticas
+# Proyecto Saludtech de los alpes equipo Compumundohipermegared
+
+Este es el repositorio donde desarrollamos nuestro proyecto del caso de estudio Saludtech de los alpes.
+
+## Decisiones sobre la arquitectura del proyecto
+
+### Topologia administración de datos
+
+Escogimos una topología de base de datos descentralizada. Cada microservicio tiene su base de datos independiente a los demás microservicios. Esta es la práctica ideal y en estos momentos no hay un costo importante de su implementación por es optamos por esta decisión. Es la práctica ideal debido a que las bases de datos de los microservicios quedan desacopladas entre si y gracias a esto los fallos en una base de datos no se van a propagar por fuera de su microservicio a las demás bases de datos.
+
+### Actividades desarrolladas por cada integrante
+
+* Daniel Gámez:
+    * Desarrollo del microservición de anonimización de imagénes
+* Maria del Mar Alas Escalante:
+    * Desarrollo del microservición de ingesta de imagenes de imagénes
+* Jhon Puentes:
+    * Desarrollo de los BFFs
+* Robert Castro:
+    * Desarrollo del microservicio de autenticacción
+    * Despliegue en Kubernetes de la solución
+
 
 ## Instrucciones
 
