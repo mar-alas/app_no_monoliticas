@@ -37,9 +37,9 @@ spec:
             port:
               number: 8080
       - pathType: Prefix
-        path: /bff
+        path: /bff/mobile
         backend:
           service:
-            name: bff-service
+            name: mobile-bff-service
             port:
               number: 80
