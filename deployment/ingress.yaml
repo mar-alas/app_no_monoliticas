@@ -43,3 +43,10 @@ spec:
             name: mobile-bff-service
             port:
               number: 80
+      - pathType: Prefix
+        path: /bff/public
+        backend:
+          service:
+            name: public-bff-service
+            port:
+              number: 80
