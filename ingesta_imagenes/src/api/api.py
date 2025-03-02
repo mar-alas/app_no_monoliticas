@@ -47,7 +47,10 @@ def ingesta_imagen():
         return jsonify(mensaje="Imagen enviada para procesamiento",), 200
     except Exception as e:
         return jsonify(error=f"Error inesperado: {str(e)}. Intente mas tarde.",), 500
-    
+
+@app.route('/ingesta-imagen/ping', methods=['GET'])
+def ping():
+    return jsonify(message="pong"), 200
     
 
 if __name__ == '__main__':

@@ -22,3 +22,10 @@ spec:
             name: anonimizacion-service
             port:
               number: 80
+      - pathType: Prefix
+        path: /ingesta-imagen
+        backend:
+          service:
+            name: ingesta-service
+            port:
+              number: 80
