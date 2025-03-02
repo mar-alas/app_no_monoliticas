@@ -1,4 +1,4 @@
-from src.infraestructura.dto import ImagenAnonimizada as ImagenAnonimizadaDTO
+from src.infraestructura.dto import DTOImagenAnonimizada as ImagenAnonimizadaDTO
 from src.config.db import db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

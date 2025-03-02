@@ -24,7 +24,7 @@ Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
 
-class ImagenAnonimizada(Base):
+class DTOImagenAnonimizada(Base):
     __tablename__ = "imagen_anonimizada"
     id = Column(String(40), primary_key=True, default=lambda: str(uuid.uuid4()))
     nombre_imagen_origen = Column(String(80), nullable=False)

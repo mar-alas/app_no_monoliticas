@@ -57,7 +57,7 @@ def inicializar_db(app):
     try:
         with app.app_context():
             logger.info("Creando tablas en la base de datos...")
-            from src.infraestructura.dto import ImagenAnonimizada
+            from src.infraestructura.dto import DTOImagenAnonimizada
             from src.config.db import db
             db.create_all()
             logger.info("Tablas creadas correctamente")

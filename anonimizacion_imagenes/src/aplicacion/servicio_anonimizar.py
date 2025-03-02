@@ -7,7 +7,7 @@ from src.infraestructura.publicadores import PublicadorEventos
 from src.seedwork.infraestructura.utils import broker_host
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 import logging
-from src.infraestructura.dto import ImagenAnonimizada as ImagenAnonimizadaDTO
+from src.infraestructura.dto import DTOImagenAnonimizada
 from src.infraestructura.respositorios import RepositorioImagenesAnonimizadasSQLAlchemy
 from src.infraestructura.despachadores import Despachador
 from src.infraestructura.schema.v1.eventos import  ImagenAnonimizadaPayload
@@ -70,7 +70,7 @@ def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:st
         despachador.publicar_evento(evento,"eventos-anonimizador")
 
 
-        imagen_dto = ImagenAnonimizadaDTO(
+        imagen_dto = DTOImagenAnonimizada(
             nombre_imagen_origen=nombre_imagen_origen
             ,nombre_imagen_destino=nombre_imagen_destino
             ,tamanio_archivo=binary_image_data.getbuffer().nbytes
