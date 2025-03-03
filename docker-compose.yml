@@ -18,6 +18,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
+    networks:
+      - pulsar
 
   user_db:
     image: postgres:15
@@ -71,6 +73,9 @@ services:
         condition: service_healthy
       anonimizacion_db:
         condition: service_healthy
+    networks:
+      - anonimizacion
+
   anonimizacion_db:
     image: postgres:15
     container_name: anonimizacion_db
@@ -87,6 +92,8 @@ services:
       interval: 10s
       retries: 5
       timeout: 5s
+    networks:
+      - anonimizacion
 
   ingesta_service:
     build:
@@ -101,6 +108,28 @@ services:
     depends_on:
       broker:
         condition: service_healthy
+
+  bff_graphql:
+    build:
+      context: ./bff
+      dockerfile: Dockerfile
+    container_name: bff_graphql_contenedor
+    profiles: ["bff",""]
+    environment:
+      - BROKER_HOST=broker
+      - ANONIMIZACION_SERVICE_URL=http://anonimizacion_contenedor:5001
+    ports:
+      - "8001:8000"
+    depends_on:
+      broker:
+        condition: service_healthy
+      anonimizacion_service:
+        condition: service_started
+      ingesta_service:
+        condition: service_started
+    networks:
+      - pulsar
+      - anonimizacion
 
 volumes:
   postgres_data:
