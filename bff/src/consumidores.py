@@ -6,10 +6,11 @@ import asyncio
 from pulsar.schema import *
 from src import utils
 
-async def suscribirse_a_topico(topico: str, suscripcion: str, schema: str, tipo_consumidor:_pulsar.ConsumerType=_pulsar.ConsumerType.Shared, eventos=[]):
+async def suscribirse_a_topico(topico: str, suscripcion: str, schema, tipo_consumidor:_pulsar.ConsumerType=_pulsar.ConsumerType.Shared, eventos=[]):
     try:
-        json_schema = utils.consultar_schema_registry(schema)  
-        avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
+        #json_schema = utils.consultar_schema_registry(schema)  
+        #avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
+        avro_schema = schema
         async with aiopulsar.connect(f'pulsar://{utils.broker_host()}:6650') as cliente:
             async with cliente.subscribe(
                 topico, 

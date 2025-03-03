@@ -4,9 +4,10 @@ import uvicorn
 from sse_starlette.sse import EventSourceResponse
 from pydantic import BaseSettings
 from typing import Any, List
-
+from pulsar.schema import AvroSchema
 from src.consumidores import suscribirse_a_topico
 from src.api.v1.router import router as v1
+from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizada
 
 class Config(BaseSettings):
     APP_VERSION: str = "1.0"
@@ -24,7 +25,7 @@ async def app_startup():
     global tasks
     global eventos
     # Suscripción a eventos de anonimización
-    task1 = asyncio.ensure_future(suscribirse_a_topico("eventos-anonimizador", "bff-subscription", "public/default/eventos-anonimizador", eventos=eventos))
+    task1 = asyncio.ensure_future(suscribirse_a_topico("eventos-anonimizador", "bff-subscription", AvroSchema(EventoIntegracionImagenAnonimizada), eventos=eventos))
     tasks.append(task1)
 
 @app.on_event("shutdown")
@@ -61,4 +62,4 @@ async def ping():
 app.include_router(v1, prefix="/v1")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)

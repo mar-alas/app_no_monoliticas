@@ -8,7 +8,7 @@ services:
   broker:
     image: apachepulsar/pulsar:2.10.2
     container_name: broker
-    profiles: ["sin_anonimizacion",""]
+    profiles: ["sin_anonimizacion","","sin_bff","pulsar"]
     command: bin/pulsar standalone
     ports:
       - "6650:6650"
@@ -24,7 +24,7 @@ services:
   user_db:
     image: postgres:15
     container_name: postgres_db
-    profiles: ["sin_anonimizacion",""]
+    profiles: ["sin_anonimizacion","","sin_bff"]
     restart: always
     environment:
       POSTGRES_USER: user
@@ -46,7 +46,7 @@ services:
       context: ./manejo_usuarios
       dockerfile: Dockerfile
     container_name: user_auth_service
-    profiles: ["sin_anonimizacion",""]
+    profiles: ["sin_anonimizacion","","sin_bff"]
     restart: always
     depends_on:
       user_db:
@@ -61,7 +61,7 @@ services:
       context: ./anonimizacion_imagenes
       dockerfile: Dockerfile
     container_name: anonimizacion_contenedor
-    profiles: ["anonimizacion",""]
+    profiles: ["anonimizacion","","sin_bff"]
     environment:
       - BROKER_HOST=broker
       - DB_HOSTNAME=anonimizacion_db
@@ -75,11 +75,12 @@ services:
         condition: service_healthy
     networks:
       - anonimizacion
+      - pulsar
 
   anonimizacion_db:
     image: postgres:15
     container_name: anonimizacion_db
-    profiles: ["sin_anonimizacion",""]
+    profiles: ["sin_anonimizacion","","sin_bff"]
     restart: always
     environment:
       POSTGRES_USER: user
@@ -100,7 +101,7 @@ services:
       context: ./ingesta_imagenes
       dockerfile: Dockerfile
     container_name: ingesta_contenedor
-    profiles: ["sin_anonimizacion",""]
+    profiles: ["sin_anonimizacion","","sin_bff"]
     environment:
       - BROKER_HOST=broker
     ports:
@@ -108,6 +109,8 @@ services:
     depends_on:
       broker:
         condition: service_healthy
+    networks:
+      - pulsar
 
   bff_graphql:
     build:
@@ -119,7 +122,7 @@ services:
       - BROKER_HOST=broker
       - ANONIMIZACION_SERVICE_URL=http://anonimizacion_contenedor:5001
     ports:
-      - "8001:8000"
+      - "8001:8001"
     depends_on:
       broker:
         condition: service_healthy

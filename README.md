@@ -79,3 +79,13 @@ con el siguiente comando se puede mandar un mensaje de prueba a un topico:
 ```bash
 docker exec -it broker bin/pulsar-client produce persistent://public/default/comando_anonimizacion_imagenes_rollback -m "{hacer rollback}
 ```
+
+con el siguiente comando se puede conocer el esquema:
+```bash
+docker exec -it broker bin/pulsar-admin schemas get persistent://public/default/eventos-anonimizador
+```
+
+con el siguiente comando se puede borrar un topico:
+```bash
+docker exec -it broker bin/pulsar-admin topics delete persistent://public/default/eventos-anonimizador
+```
