@@ -2,6 +2,12 @@
 
 Este es el repositorio donde desarrollamos nuestro proyecto del caso de estudio Saludtech de los alpes.
 
+## Escenarios de Calidad a Probar
+
+* Escenario #1 (Disponibilidad): Ante alta concurrencia de usuarios la ingesta de imágenes debe seguir operando normalmente.
+* Escenario #4 (Escalabilidad): Crecer el sistema ante una carga de datos exponencial por parte de centros de salud y laboratorios.
+* Escenario #8 (Seguridad): Los datos sin anonimizar solamente pueden ser accedidos por personas autorizadas.
+
 ## Decisiones sobre la arquitectura del proyecto
 
 ### Topologia administración de datos
