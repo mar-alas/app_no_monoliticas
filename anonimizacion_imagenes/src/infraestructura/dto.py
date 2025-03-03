@@ -11,6 +11,7 @@ import uuid
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 # Define the database connection
 DB_USERNAME = os.getenv('DB_USERNAME', default="user")
@@ -31,5 +32,9 @@ class DTOImagenAnonimizada(Base):
     nombre_imagen_destino = Column(String(80), nullable=False)
     tamanio_archivo=Column(Integer, nullable=False)
     fecha_creacion = Column(DateTime, nullable=False, default=func.current_timestamp())
+
+class DTOImagenAnonimizadaSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = DTOImagenAnonimizada
 
 Base.metadata.create_all(engine)

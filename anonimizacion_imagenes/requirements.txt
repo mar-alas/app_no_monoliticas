@@ -53,3 +53,4 @@ google-resumable-media==2.7.2
 googleapis-common-protos==1.68.0
 flask_sqlalchemy==3.0.0
 psycopg2-binary==2.9.10
+marshmallow_sqlalchemy==0.26.1
