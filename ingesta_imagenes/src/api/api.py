@@ -60,8 +60,7 @@ def ping():
 
 
 if __name__ == '__main__':
-    app.config['SQLALCHEMY_DATABASE_URI'] =\
-            'sqlite:///' + os.path.join(basedir, 'ingesta.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///../src/infraestructura/ingesta.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.secret_key = '9d58f98f-3ae8-4149-a09f-3a8c2012e32c'
@@ -69,8 +68,12 @@ if __name__ == '__main__':
 
     from src.config.db import init_db
     db = init_db(app)
+    
+    # Import the model after db is initialized
     from src.infraestructura.dto import IngestaImagenes
-    IngestaImagenes()
+    
+    # Create all tables
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=5000,debug=True)
+        
+    app.run(host="0.0.0.0", port=5000, debug=True)

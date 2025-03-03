@@ -51,3 +51,4 @@ sympy==1.13.1
 tifffile==2025.2.18
 typing_extensions==4.12.2
 urllib3==2.3.0
+flask_sqlalchemy==3.0.0

@@ -110,3 +110,9 @@ La información para conectarse a GCP está en `.key`.
 ```sh
 pip install --upgrade --no-cache-dir "pip<24.1" setuptools wheel
 ```
+
+En caso de tener problemas por directorios correr el comando en linux:
+
+```sh
+ export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+```

@@ -5,18 +5,26 @@ la infraestructura del dominio de ingesta
 
 """
 
-from src.config.db import db
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, ForeignKey, Integer, Table
-from datetime import datetime
-import uuid
+from sqlalchemy import Column, String, DateTime, ForeignKey, Integer
+from sqlalchemy.ext.declarative import declarative_base
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-class IngestaImagenes(db.Model):
+basedir = os.path.abspath(os.path.dirname(__file__))
+DATABASE_URL = f'sqlite:///' + os.path.join(basedir, 'ingesta.db')
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
+Base = declarative_base()
+
+class IngestaImagenes(Base):
     __tablename__ = "ingesta_imagenes"
-    id = db.Column(db.String, primary_key=True)
-    fecha_creacion = db.Column(db.DateTime, nullable=False)
-    filename = db.Column(db.String, nullable=False)
-    size = db.Column(db.String, nullable=False)
-    binario_url = db.Column(db.String, nullable=False)
-    mimetype = db.Column(db.String, nullable=False)
-    proveedor = db.Column(db.String, nullable=False)
+    id = Column(String, primary_key=True)
+    fecha_creacion = Column(DateTime, nullable=False)
+    filename = Column(String, nullable=False)
+    size = Column(String, nullable=False)
+    binario_url = Column(String, nullable=False)
+    mimetype = Column(String, nullable=False)
+    proveedor = Column(String, nullable=False)
+
+Base.metadata.create_all(engine)
