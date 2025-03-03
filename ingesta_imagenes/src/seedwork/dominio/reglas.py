@@ -77,3 +77,18 @@ class ImagenDeAnonimizacionEsValida(ReglaNegocio):
         if self.imagen is None:
             return False
         return True
+
+class IdEntidadEsInmutable(ReglaNegocio):
+
+    entidad: object
+
+    def __init__(self, entidad, mensaje='El identificador de la entidad debe ser Inmutable'):
+        super().__init__(mensaje)
+        self.entidad = entidad
+
+    def es_valido(self) -> bool:
+        try:
+            if self.entidad._id:
+                return False
+        except AttributeError as error:
+            return True

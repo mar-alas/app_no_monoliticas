@@ -31,6 +31,5 @@ class Despachador:
             binario=comando.binario,
             mimetype=comando.mimetype
         )
-        from pdb import set_trace; set_trace()
         comando_integracion = ComandoIngestaImagen(data=payload)
         self._publicar_mensaje(comando_integracion, topico, AvroSchema(ComandoIngestaImagen))
