@@ -24,8 +24,8 @@ async def app_startup():
     global tasks
     global eventos
     # Suscripción a eventos de anonimización
-    # task1 = asyncio.ensure_future(suscribirse_a_topico("eventos-anonimizador", "bff-subscription", "public/default/eventos-anonimizador", eventos=eventos))
-    # tasks.append(task1)
+    task1 = asyncio.ensure_future(suscribirse_a_topico("eventos-anonimizador", "bff-subscription", "public/default/eventos-anonimizador", eventos=eventos))
+    tasks.append(task1)
 
 @app.on_event("shutdown")
 def shutdown_event():
