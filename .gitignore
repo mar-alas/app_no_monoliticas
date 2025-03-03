@@ -11,3 +11,4 @@ ingesta_imagenes/.keys
 anonimizacion_imagenes/.keys
 *.jpeg
 *key.json
+*appnomonoliticas.json
