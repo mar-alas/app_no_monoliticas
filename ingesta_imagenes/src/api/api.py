@@ -1,9 +1,14 @@
+from src.config.db import init_db
 from src.aplicacion.servicio_ingesta_imagen import ServicioIngestaImagen
 from io import BytesIO
 from flask import Flask, jsonify, request, send_file
 from src.seedwork.dominio.reglas import FormatoDeImagenEsValido, NombreDeImagenNoPuedeSerVacio, ImagenDeAnonimizacionEsValida, TamanioDeImagenEsValido
 from datetime import datetime
 from uuid import uuid4
+import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 from src.seedwork.aplicacion.autenticacion import token_required
 import logging
@@ -51,7 +56,21 @@ def ingesta_imagen():
 @app.route('/ingesta-imagen/ping', methods=['GET'])
 def ping():
     return jsonify(message="pong"), 200
-    
+
+
 
 if __name__ == '__main__':
+    app.config['SQLALCHEMY_DATABASE_URI'] =\
+            'sqlite:///' + os.path.join(basedir, 'ingesta.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    app.secret_key = '9d58f98f-3ae8-4149-a09f-3a8c2012e32c'
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+    from src.config.db import init_db
+    db = init_db(app)
+    from src.infraestructura.dto import IngestaImagenes
+    IngestaImagenes()
+    with app.app_context():
+        db.create_all()
     app.run(host="0.0.0.0", port=5000,debug=True)
