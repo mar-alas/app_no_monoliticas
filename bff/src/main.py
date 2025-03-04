@@ -30,8 +30,8 @@ async def app_startup():
     global tasks
     global eventos
     # Suscripción a eventos de anonimización
-    task1 = asyncio.ensure_future(suscribirse_a_topico("eventos-anonimizador", "bff-subscription", AvroSchema(EventoIntegracionImagenAnonimizada), eventos=eventos))
-    tasks.append(task1)
+    # task1 = asyncio.ensure_future(suscribirse_a_topico("eventos-anonimizador", "bff-subscription", AvroSchema(EventoIntegracionImagenAnonimizada), eventos=eventos))
+    # tasks.append(task1)
 
 @app.on_event("shutdown")
 def shutdown_event():
@@ -121,7 +121,6 @@ async def ingesta_imagen(
     except Exception as e:
         return {"error": str(e), "status_code": 500}
 
-# Router GraphQL
 app.include_router(v1, prefix="/bff/v1")
 
 if __name__ == "__main__":
