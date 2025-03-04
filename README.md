@@ -14,6 +14,10 @@ Este es el repositorio donde desarrollamos nuestro proyecto del caso de estudio 
 
 Escogimos una topología de base de datos descentralizada. Cada microservicio tiene su base de datos independiente a los demás microservicios. Esta es la práctica ideal y en estos momentos no hay un costo importante de su implementación por es optamos por esta decisión. Es la práctica ideal debido a que las bases de datos de los microservicios quedan desacopladas entre si y gracias a esto los fallos en una base de datos no se van a propagar por fuera de su microservicio a las demás bases de datos.
 
+### Tecnología de mensajería
+
+Escogimos Avro como nuestra tecnología de serialización por su facil implementación con pulsar y debido a que es un esquema más rápido y robusto que JSON. El versionamiento de los mensajes de comandos o eventos lo hicimos en la carpeta de infraestructura de cada microservicio. Por ahora solamente estamos manejando la versión V1 que se puede ver en estas carpetas. 
+
 ### Actividades desarrolladas por cada integrante
 
 * Daniel Gámez:
