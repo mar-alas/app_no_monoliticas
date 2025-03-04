@@ -28,13 +28,13 @@ spec:
               cpu: "200m"
           readinessProbe:
             httpGet:
-              path: /bff/web/v1/ping
+              path: /bff/ping
               port: 3001
             initialDelaySeconds: 10
             periodSeconds: 30
           livenessProbe:
             httpGet:
-              path: /bff/web/v1/ping
+              path: /bff/ping
               port: 3001
             initialDelaySeconds: 15
             periodSeconds: 30
@@ -48,7 +48,7 @@ spec:
     checkIntervalSec: 30
     port: 3001
     type: HTTP
-    requestPath: /bff/web/v1/ping
+    requestPath: /bff/ping
 ---
 kind: Service
 apiVersion: v1
