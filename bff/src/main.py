@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi import FastAPI, Request, BackgroundTasks, File, Form, UploadFile, Depends, HTTPException
 import asyncio
 import uvicorn
 from sse_starlette.sse import EventSourceResponse
@@ -10,10 +10,12 @@ from src.api.v1.router import router as v1
 from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizada
 import requests
 import os
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 class Config(BaseSettings):
     APP_VERSION: str = "1.0"
     ANONIMIZACION_SERVICE_URL: str = "http://anonimizacion_service:5001"
+    INGESTA_SERVICE_URL: str = os.getenv("INGESTA_SERVICE_URL", "http://localhost:5000")
 
 settings = Config()
 app_configs: dict[str, Any] = {"title": "BFF-Imagenes"}
@@ -21,6 +23,7 @@ app_configs: dict[str, Any] = {"title": "BFF-Imagenes"}
 app = FastAPI(**app_configs)
 tasks = list()
 eventos = list()
+security = HTTPBearer()
 
 @app.on_event("startup")
 async def app_startup():
@@ -77,6 +80,43 @@ async def login(request: Request):
         )
         
         # Return the authentication service response
+        return response.json()
+    except Exception as e:
+        return {"error": str(e), "status_code": 500}
+
+@app.post('/ingesta-imagen')
+async def ingesta_imagen(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    image: UploadFile = File(...),
+    proveedor: str = Form(...)
+):
+    try:
+        # Prepare the multipart form data
+        files = {
+            'image': (image.filename, await image.read(), image.content_type)
+        }
+        form_data = {
+            'proveedor': proveedor
+        }
+        
+        # Forward the request to the ingesta service with the token
+        token = credentials.credentials
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        
+        response = requests.post(
+            f"{settings.INGESTA_SERVICE_URL}/ingesta-imagen",
+            files=files,
+            data=form_data,
+            headers=headers
+        )
+        
+        # Check if the request was successful
+        if response.status_code >= 400:
+            return {"error": response.text, "status_code": response.status_code}
+        
+        # Return the ingesta service response
         return response.json()
     except Exception as e:
         return {"error": str(e), "status_code": 500}
