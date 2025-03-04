@@ -8,6 +8,8 @@ from pulsar.schema import AvroSchema
 from src.consumidores import suscribirse_a_topico
 from src.api.v1.router import router as v1
 from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizada
+import requests
+import os
 
 class Config(BaseSettings):
     APP_VERSION: str = "1.0"
@@ -57,6 +59,27 @@ async def stream_mensajes(request: Request):
 @app.get('/ping')
 async def ping():
     return {"status": "up"}
+
+@app.post('/login')
+async def login(request: Request):
+    try:
+        # Get JSON body content
+        body_json = await request.json()
+        
+        # Get authentication service URL from environment variable or use default
+        USER_AUTH_SERVICE_URL = os.getenv("USER_AUTH_SERVICE_URL", "http://localhost:8000")
+        
+        # Forward the request to authentication service
+        response = requests.post(
+            f"{USER_AUTH_SERVICE_URL}/auth/login", 
+            json=body_json,
+            headers={"Content-Type": "application/json"}
+        )
+        
+        # Return the authentication service response
+        return response.json()
+    except Exception as e:
+        return {"error": str(e), "status_code": 500}
 
 # Router GraphQL
 app.include_router(v1, prefix="/v1")
