@@ -16,9 +16,18 @@ spec:
     spec:
       containers:
         - name: bff
-          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:1.0
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:2.1
           ports:
-            - containerPort: 3001
+            - containerPort: 8001
+          env:
+            - name: ANONIMIZACION_SERVICE_URL
+              value: "http://anonimizacion-service"
+            - name: INGESTA_SERVICE_URL
+              value: "http://ingesta-service"
+            - name: BROKER_HOST
+              value: "http://pulsar"
+            - name: USER_AUTH_SERVICE_URL
+              value: "http://servicio-manejo-usuarios"
           resources:
             requests:
               memory: "128Mi"
@@ -28,14 +37,14 @@ spec:
               cpu: "200m"
           readinessProbe:
             httpGet:
-              path: /bff/web/v1/ping
-              port: 3001
+              path: /bff/ping
+              port: 8001
             initialDelaySeconds: 10
             periodSeconds: 30
           livenessProbe:
             httpGet:
-              path: /bff/web/v1/ping
-              port: 3001
+              path: /bff/ping
+              port: 8001
             initialDelaySeconds: 15
             periodSeconds: 30
 ---
@@ -46,9 +55,9 @@ metadata:
 spec:
   healthCheck:
     checkIntervalSec: 30
-    port: 3001
+    port: 8001
     type: HTTP
-    requestPath: /bff/web/v1/ping
+    requestPath: /bff/ping
 ---
 kind: Service
 apiVersion: v1
@@ -63,5 +72,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3001
+      targetPort: 8001
       nodePort: 30003

@@ -191,8 +191,8 @@ docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monolitica
 #### Servicio de Anonimización
 ```bash
 cd anonimizacion_imagenes
-docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:1.0 .
-docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:1.0
+docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:4.0 .
+docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:4.0
 ```
 
 #### Servicio de Ingesta
@@ -254,9 +254,7 @@ kubectl apply -f deployment/ingesta-deployment.yaml
 
 ### 5. Desplegar BFFs
 ```bash
-kubectl apply -f deployment/mobile-bff-deployment.yaml
-kubectl apply -f deployment/public-bff-deployment.yaml
-kubectl apply -f deployment/web-bff-deployment.yaml
+kubectl apply -f deployment/bff-deployment.yaml
 ```
 
 ## Configuración del Ingress

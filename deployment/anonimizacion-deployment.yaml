@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: anonimizacion
-          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:1.0
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:5.0
           ports:
             - containerPort: 5001
           env:
