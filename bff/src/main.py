@@ -14,7 +14,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 class Config(BaseSettings):
     APP_VERSION: str = "1.0"
-    ANONIMIZACION_SERVICE_URL: str = "http://anonimizacion_service:5001"
+    ANONIMIZACION_SERVICE_URL: str = os.getenv("ANONIMIZACION_SERVICE_URL","http://localhost:5001")
     INGESTA_SERVICE_URL: str = os.getenv("INGESTA_SERVICE_URL", "http://localhost:5000")
 
 settings = Config()
@@ -39,7 +39,7 @@ def shutdown_event():
     for task in tasks:
         task.cancel()
 
-@app.get('/stream')
+@app.get('/bff/stream')
 async def stream_mensajes(request: Request):
     def nuevo_evento():
         global eventos
@@ -59,11 +59,11 @@ async def stream_mensajes(request: Request):
 
     return EventSourceResponse(leer_eventos())
 
-@app.get('/ping')
+@app.get('/bff/ping')
 async def ping():
     return {"status": "up"}
 
-@app.post('/login')
+@app.post('/bff/login')
 async def login(request: Request):
     try:
         # Get JSON body content
@@ -84,7 +84,7 @@ async def login(request: Request):
     except Exception as e:
         return {"error": str(e), "status_code": 500}
 
-@app.post('/ingesta-imagen')
+@app.post('/bff/ingesta-imagen')
 async def ingesta_imagen(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     image: UploadFile = File(...),
@@ -122,7 +122,7 @@ async def ingesta_imagen(
         return {"error": str(e), "status_code": 500}
 
 # Router GraphQL
-app.include_router(v1, prefix="/v1")
+app.include_router(v1, prefix="/bff/v1")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
