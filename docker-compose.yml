@@ -3,6 +3,8 @@ networks:
     driver: bridge
   anonimizacion:
     driver: bridge
+  ingesta:
+    driver: bridge
 
 services:
   broker:
@@ -96,6 +98,24 @@ services:
     networks:
       - anonimizacion
 
+  ingesta_db:
+    image: postgres:15
+    container_name: ingesta_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ingesta_db
+    ports:
+      - "9002:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d ingesta_db"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    networks:
+      - ingesta
+
   ingesta_service:
     build:
       context: ./ingesta_imagenes
@@ -104,12 +124,17 @@ services:
     profiles: ["sin_anonimizacion","","sin_bff"]
     environment:
       - BROKER_HOST=broker
+      - DB_HOSTNAME=ingesta_db
+      - DB_PORT=5432
     ports:
       - "5000:5000"
     depends_on:
       broker:
         condition: service_healthy
+      ingesta_db:
+        condition: service_healthy
     networks:
+      - ingesta
       - pulsar
 
   bff_graphql:
