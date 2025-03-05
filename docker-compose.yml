@@ -5,6 +5,8 @@ networks:
     driver: bridge
   ingesta:
     driver: bridge
+  user:
+    driver: bridge
 
 services:
   broker:
@@ -32,6 +34,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: user_db
+    networks:
+      - user
     ports:
       - "5432:5432"
     volumes:
@@ -55,6 +59,8 @@ services:
         condition: service_healthy 
     environment:
       DATABASE_URL: postgresql://user:password@user_db/user_db
+    networks:
+      - user
     ports:
       - "8000:8000"
 
@@ -160,6 +166,7 @@ services:
     networks:
       - pulsar
       - anonimizacion
+      - user
 
 volumes:
   postgres_data:
