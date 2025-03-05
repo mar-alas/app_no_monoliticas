@@ -11,8 +11,13 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+DB_USERNAME = os.getenv('DB_USERNAME', default="user")
+DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
+DB_HOSTNAME = os.getenv('DB_HOSTNAME', default="localhost")
+DB_PORT = os.getenv('DB_PORT', default="9002")
+
 basedir = os.path.abspath(os.path.dirname(__file__))
-DATABASE_URL = f'sqlite:///' + os.path.join(basedir, 'ingesta.db')
+DATABASE_URL = f'postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/ingesta_db'
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()

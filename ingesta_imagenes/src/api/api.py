@@ -17,6 +17,11 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+DB_USERNAME = os.getenv('DB_USERNAME', default="user")
+DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
+DB_HOSTNAME = os.getenv('DB_HOSTNAME', default="localhost")
+DB_PORT = os.getenv('DB_PORT', default="9002")
+
 @app.route('/')
 @token_required
 def home():
@@ -60,7 +65,8 @@ def ping():
 
 
 if __name__ == '__main__':
-    app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///../src/infraestructura/ingesta.db'
+    # app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///../src/infraestructura/ingesta.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/ingesta_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.secret_key = '9d58f98f-3ae8-4149-a09f-3a8c2012e32c'
