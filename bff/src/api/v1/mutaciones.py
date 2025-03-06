@@ -11,15 +11,15 @@ from .esquemas import *
 @strawberry.type
 class Mutation:
     @strawberry.mutation
-    async def anonimizar_imagen(
+    async def ingestar_imagen(
         self, 
         imagen_base64: str, 
         nombre_imagen: str, 
         proveedor: str = "lat", 
         info: Info = None
-    ) -> RespuestaAnonimizacion:
+    ) -> IngestaRespuesta:
         """
-        Envía un comando a la cola para anonimizar una imagen.
+        Envía un comando a la cola para ingestar una imagen.
         """
         try:
             # Generar un ID único para esta operación
@@ -40,7 +40,6 @@ class Mutation:
                 "time": utils.time_millis(),
                 "specversion": "v1",
                 "type": "ComandoIngestaImagen",
-                "ingestion": utils.time_millis(),
                 "datacontenttype": "AVRO",
                 "service_name": "BFF GraphQL",
                 "data": payload
@@ -50,19 +49,19 @@ class Mutation:
             despachador = Despachador()
             await despachador.publicar_mensaje(
                 comando, 
-                "comando_ingesta_imagenes", 
-                "public/default/comando_ingesta_imagenes"
+                "comando_ingestar_imagenes",
+                "public/default/comando_ingestar_imagenes"
             )
+            # return "Mensaje procesado"
             
-            return RespuestaAnonimizacion(
-                exitoso=True,
+            return IngestaRespuesta(
                 mensaje=f"Comando enviado a la cola con ID: {id_comando}",
                 codigo=202  # Accepted - procesando de forma asíncrona
             )
                 
         except Exception as e:
-            return RespuestaAnonimizacion(
-                exitoso=False,
+            # "error"
+            return IngestaRespuesta(
                 mensaje=f"Error al enviar comando: {str(e)}",
                 codigo=500
             )
