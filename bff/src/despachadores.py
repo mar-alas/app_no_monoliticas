@@ -7,8 +7,9 @@ class Despachador:
         try:
             # Obtener el schema del registro
             try:
-                json_schema = utils.consultar_schema_registry(schema)  
+                json_schema = utils.consultar_schema_registry(schema)
                 avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
+                avro_schema = None 
             except Exception as e:
                 print(f"Error obteniendo schema, usando AvroSchema genérico: {e}")
                 # Si no se puede obtener el schema, usamos un AvroSchema genérico
