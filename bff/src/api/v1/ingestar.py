@@ -6,6 +6,9 @@ import strawberry
 from .consultas import Query
 from io import BytesIO
 import base64
+from src.despachadores import Despachador
+from src.infraestructura.schema.v1.eventos import InicioSagaPayload,EventoIntegracionInicioSaga
+from pulsar.schema import AvroSchema
 
 router = APIRouter()
 
@@ -41,6 +44,15 @@ async def ingestar_imagen(
         variable_values=variables,
         context_value=context,
     )
+
+    despachador=Despachador()
+    payload=InicioSagaPayload(mensaje="Inicio de la saga de ingesta de imagen")
+    evento_inicio_saga=EventoIntegracionInicioSaga(data=payload)
+    avro_schema=AvroSchema(EventoIntegracionInicioSaga)
+    await despachador.publicar_mensaje_avro(mensaje=evento_inicio_saga,
+                                      topico='eventos-bff',
+                                      avro_schema=avro_schema)
+
     return Response(
         content=result.data["ingestarImagen"]["mensaje"],
         status_code=result.data["ingestarImagen"]["codigo"])

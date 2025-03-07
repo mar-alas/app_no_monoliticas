@@ -40,3 +40,12 @@ class EventoIntegracionImagenIngestada(EventoIntegracion):
     event_name= String(default="ImagenIngestada")
     specversion = String(default="v1")
     data = ImagenIngestadaPayload()
+
+class InicioSagaPayload(Record):
+    mensaje = String()
+
+class EventoIntegracionInicioSaga(EventoIntegracion):
+    service_name = String(default="bff")
+    event_name= String(default="InicioSaga")
+    specversion = String(default="v1")
+    data = InicioSagaPayload()

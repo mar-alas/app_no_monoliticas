@@ -36,6 +36,26 @@ class Despachador:
         except Exception as e:
             print(f"Error al publicar mensaje: {e}")
 
+    async def publicar_mensaje_avro(self, mensaje, topico, avro_schema):
+        try:
+            cliente = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
+
+            # Si tenemos un schema, lo usamos, sino publicamos sin schema
+            if avro_schema:
+                publicador = cliente.create_producer(topico, schema=avro_schema)
+            else:
+                publicador = cliente.create_producer(topico)
+                # Convertir el mensaje a JSON
+                if not isinstance(mensaje, str):
+                    import json
+                    mensaje = json.dumps(mensaje)
+                    mensaje = mensaje.encode('utf-8')
+
+            publicador.send(mensaje)
+            cliente.close()
+            return True
+        except Exception as e:
+            print(f"Error al publicar mensaje: {e}")
     # def _publicar_mensaje(self, mensaje, topico, schema):
     #     cliente = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
     #     publicador = cliente.create_producer(topico) # schema=AvroSchema(ComandoIngestaImagen))

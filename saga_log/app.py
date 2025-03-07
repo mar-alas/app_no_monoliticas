@@ -5,6 +5,7 @@ import logging
 from dto import db, SagaLog,SagaLogSchema
 from servicios import almacenar_saga_log
 from eventos import EventoIntegracionImagenAnonimizada,EventoIntegracionImagenIngestada
+from eventos import EventoIntegracionInicioSaga
 from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
@@ -28,11 +29,12 @@ def iniciar_suscriptor():
         pulsar_host=broker_host()
         suscriptor = SuscriptorEventos(f'pulsar://{pulsar_host}:6650')
         
+        
         suscriptor.suscribirse_a_topico(
-            topico='eventos-anonimizador',
+            topico='eventos-bff',
             subscripcion='sagalog-sub',
             callback=almacenar_saga_log,
-            avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
+            avro_schema=AvroSchema(EventoIntegracionInicioSaga)
         )
 
         suscriptor.suscribirse_a_topico(
@@ -41,6 +43,15 @@ def iniciar_suscriptor():
             callback=almacenar_saga_log,
             avro_schema=AvroSchema(EventoIntegracionImagenIngestada)
         )
+        
+        suscriptor.suscribirse_a_topico(
+            topico='eventos-anonimizador',
+            subscripcion='sagalog-sub',
+            callback=almacenar_saga_log,
+            avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
+        )
+
+        
 
         logger.info("Suscriptor iniciado correctamente")
     except Exception as e:
