@@ -1,24 +1,83 @@
 import pulsar
 from pulsar.schema import *
+import logging
+import time
+import os
+from datetime import datetime
 
 from src.infraestructura.schema.v1.eventos import EventoIntegracionVerificacionCompletada, VerificacionResultadoPayload
-from src.seedwork.infraestructura import utils
+from src.infraestructura.eventos_utils import RastreadorEventos, MedidorTiempo
 
-import datetime
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-epoch = datetime.datetime.utcfromtimestamp(0)
-
-def unix_time_millis(dt):
-    return (dt - epoch).total_seconds() * 1000.0
+# Función de utilidad local
+def broker_host():
+    return os.getenv('BROKER_HOST', 'localhost')
 
 class Despachador:
     def _publicar_mensaje(self, mensaje, topico, schema):
-        cliente = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
-        publicador = cliente.create_producer(topico, schema=schema)
-        publicador.send(mensaje)
-        cliente.close()
+        """
+        Publica un mensaje en un tópico específico
+        
+        Args:
+            mensaje: Mensaje a publicar
+            topico: Tópico donde publicar
+            schema: Esquema del mensaje
+        """
+        medidor = MedidorTiempo(f"publicacion_mensaje_{topico}").iniciar()
+        
+        try:
+            # Crear cliente y productor
+            cliente = pulsar.Client(f'pulsar://{broker_host()}:6650')
+            publicador = cliente.create_producer(topico, schema=schema)
+            
+            # Publicar mensaje
+            publicador.send(mensaje)
+            logger.info(f"Mensaje publicado exitosamente en tópico {topico}")
+            
+            # Cerrar conexiones
+            publicador.close()
+            cliente.close()
+            
+            medidor.detener().registrar()
+            
+        except Exception as e:
+            logger.error(f"Error al publicar mensaje en tópico {topico}: {str(e)}")
+            medidor.detener()
+            raise
 
     def publicar_evento(self, evento: VerificacionResultadoPayload, topico):
-        payload = evento
-        evento_integracion = EventoIntegracionVerificacionCompletada(data=payload)
-        self._publicar_mensaje(evento_integracion, topico, AvroSchema(EventoIntegracionVerificacionCompletada))
+        """
+        Publica un evento de verificación en el tópico especificado
+        
+        Args:
+            evento: Payload del evento
+            topico: Tópico donde publicar
+        """
+        try:
+            # Timestamp para el evento
+            timestamp = int(time.time() * 1000)
+            
+            # Crear evento de integración
+            evento_integracion = EventoIntegracionVerificacionCompletada(
+                data=evento,
+                time=timestamp,
+                ingestion=0,
+                specversion="v1",
+                type="VerificacionCompletada",
+                datacontenttype="application/json",
+                service_name="verificacion_anonimizacion"
+            )
+            
+            # Publicar el mensaje
+            self._publicar_mensaje(evento_integracion, topico, AvroSchema(EventoIntegracionVerificacionCompletada))
+            
+            # Registrar el envío del evento
+            logger.info(f"Evento {evento_integracion.id} publicado en tópico {topico}")
+            
+            return evento_integracion.id
+            
+        except Exception as e:
+            logger.error(f"Error al publicar evento: {str(e)}")
+            return None
