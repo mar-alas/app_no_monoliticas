@@ -1,15 +1,7 @@
-"""DTOs para la capa de infrastructura del dominio de ingesta
-
-En este archivo usted encontrará los DTOs (modelos anémicos) de
-la infraestructura del dominio de ingesta
-
-"""
-
-from sqlalchemy import Column, String, DateTime, ForeignKey, Integer
+from sqlalchemy import Column, String, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-import os
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import os
 
 DB_USERNAME = os.getenv('DB_USERNAME', default="user")
 DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
