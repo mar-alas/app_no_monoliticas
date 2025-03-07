@@ -116,3 +116,14 @@ En caso de tener problemas por directorios correr el comando en linux:
 ```sh
  export PYTHONPATH=$PYTHONPATH:$(pwd)/src
 ```
+
+
+```bash
+docker exec -it ingesta_db psql -U user -d ingesta_db -c "\dt"
+```
+
+
+crear base de datos de prueba
+```bash
+docker exec -it ingesta_db psql -U user -d ingesta_db -c "SELECT * FROM ingesta_imagenes;"
+```

@@ -7,6 +7,9 @@ import json
 import pulsar
 import base64
 from io import BytesIO
+from src.infraestructura.despachadores import Despachador
+from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

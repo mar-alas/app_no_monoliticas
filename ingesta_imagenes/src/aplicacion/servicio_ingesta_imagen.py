@@ -28,3 +28,9 @@ class ServicioIngestaImagen:
         ,   mimetype="image/jpeg"
         )
         self.handler.handle(dto)
+
+        
+
+
+
+
