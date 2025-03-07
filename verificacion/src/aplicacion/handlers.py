@@ -1,10 +1,20 @@
 import logging
 from src.aplicacion.servicio_verificacion import servicio_verificar_anonimizacion
+from src.seedwork.dominio.eventos import EventoDominio
+from src.infraestructura.despachadores import Despachador
+from src.infraestructura.schema.v1.eventos import VerificacionResultadoPayload
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class HandlerVerificacionIntegracion:
+class Handler:
+    """Clase base para los handlers"""
+    
+    @staticmethod
+    def handle_event(evento):
+        raise NotImplementedError
+
+class HandlerVerificacionIntegracion(Handler):
     @staticmethod
     def handle_imagen_anonimizada(evento):
         """
@@ -21,9 +31,35 @@ class HandlerVerificacionIntegracion:
                 datos = evento['data']
                 id_imagen = datos.get('id_imagen')
                 filename = datos.get('filename')
+                size = datos.get('size', '0')
+                
+                if not id_imagen or not filename:
+                    logger.warning("Evento recibido con datos incompletos, falta id_imagen o filename")
+                    return
+                
+                # Proveedor 'lat' por defecto
+                proveedor = "lat"
                 
                 # Llamar al servicio de verificación
-                servicio_verificar_anonimizacion(id_imagen, filename)
+                resultado_verificacion = servicio_verificar_anonimizacion(id_imagen, filename, proveedor)
+                
+                # Si el servicio devuelve un resultado, publicar evento
+                if resultado_verificacion:
+                    despachador = Despachador()
+                    
+                    # Crear payload del evento
+                    resultado_evento = VerificacionResultadoPayload(
+                        id_verificacion=str(resultado_verificacion.get('id_verificacion')),
+                        id_imagen=id_imagen,
+                        filename=filename,
+                        resultado=resultado_verificacion.get('resultado'),
+                        detalle=resultado_verificacion.get('detalle', ''),
+                        fecha_verificacion=resultado_verificacion.get('fecha_verificacion')
+                    )
+                    
+                    # Publicar evento
+                    despachador.publicar_evento(resultado_evento, 'eventos-verificacion')
+                    logger.info(f"Evento de resultado de verificación publicado para imagen {id_imagen}_{filename}")
             else:
                 logger.warning("Evento recibido sin datos esperados")
                 
