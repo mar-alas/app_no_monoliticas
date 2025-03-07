@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Request, UploadFile, Form, File, Response
-from strawberry.fastapi import BaseContext
+from fastapi import APIRouter, Request, UploadFile, Form, File, Response, Depends
+from src.seedwork.aplicacion.autenticacion import token_required
+from strawberry.fastapi.context import BaseContext
 from .mutaciones import Mutation
 import strawberry
 from .consultas import Query
@@ -9,7 +10,12 @@ import base64
 router = APIRouter()
 
 @router.post("/ingesta-imagen")
-async def ingestar_imagen(request: Request, image: UploadFile = File(...), proveedor: str = Form(...)):
+async def ingestar_imagen(
+    request: Request,
+    image: UploadFile = File(...),
+    proveedor: str = Form(...),
+    current_user: str = Depends(token_required)  # Use the token_required dependency
+):
     schema = strawberry.Schema(query=Query, mutation=Mutation)
     context = BaseContext()
     context.request = request
