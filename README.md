@@ -71,7 +71,11 @@ para listar los topicos:
 ```bash
 docker exec -it broker bin/pulsar-admin topics list public/default
 ```
+para borrar topicos:
 
+```bash
+docker exec -it broker bin/pulsar-admin topics delete public/default/eventos-anonimizador
+```
 
 o con el siguiente comando adentro del contenedor del broker:
 
