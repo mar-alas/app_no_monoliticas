@@ -48,7 +48,7 @@ class Mutation:
             # Publicar el comando en la cola
             despachador = Despachador()
             await despachador.publicar_mensaje(
-                comando, 
+                comando,
                 "comando_ingestar_imagenes",
                 "public/default/comando_ingestar_imagenes"
             )
