@@ -15,7 +15,7 @@ class SuscriptorEventos:
         self.consumidores = []
         self.hilos = []
     
-    def suscribirse_a_topico(self, topico, subscripcion, callback):
+    def suscribirse_a_topico(self, topico, subscripcion, callback,avro_schema):
         """
         Suscribe a un tópico específico de Pulsar
         
@@ -23,12 +23,13 @@ class SuscriptorEventos:
             topico: Nombre del tópico
             subscripcion: Nombre de la subscripción
             callback: Función a ejecutar cuando se recibe un mensaje
+            avro_schema: Esquema Avro para deserializar los mensajes
         """
         consumer = self.client.subscribe(
             topico,
             subscription_name=subscripcion,
             consumer_type=pulsar.ConsumerType.Shared,
-            schema=AvroSchema(EventoIntegracionImagenAnonimizada)
+            schema=avro_schema
         )
         
         self.consumidores.append(consumer)

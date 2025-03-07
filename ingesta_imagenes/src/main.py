@@ -34,10 +34,20 @@ def process_message(data: bytes):
         datos = base64.b64decode(datos_base64)
         datos = BytesIO(base64.b64decode(datos_base64))
         servicio = ServicioIngestaImagen()
-        servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
-        logger.info(f"Processed message: {message_dict}")
+        try:
+            servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
+            logger.info(f"Processed message: {message_dict}")
+        except Exception as e:
+            logger.error(f"Failed to process message: {e}")
+        
+        despachador=Despachador()
+        payload=ImagenIngestadaPayload(
+        )
+        despachador.publicar_evento(payload,topico="eventos-ingesta")
+        logger.info("Publicado evento de imagen ingesta")
+
     except Exception as e:
-        logger.error(f"Failed to process message: {e}")
+        logger.error(f"Failed to process message 2: {e}")
 
 if __name__ == '__main__':
     pulsar_host = f'pulsar://{broker_host()}:6650'

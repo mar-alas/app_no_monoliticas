@@ -4,6 +4,8 @@ from config import app
 import logging
 from dto import db, SagaLog,SagaLogSchema
 from servicios import almacenar_saga_log
+from eventos import EventoIntegracionImagenAnonimizada
+from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,9 +29,10 @@ def iniciar_suscriptor():
         suscriptor = SuscriptorEventos(f'pulsar://{pulsar_host}:6650')
         
         suscriptor.suscribirse_a_topico(
-            'eventos-anonimizador',
-            'sagalog-sub',
-            almacenar_saga_log
+            topico='eventos-anonimizador',
+            subscripcion='sagalog-sub',
+            callback=almacenar_saga_log,
+            avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
         )
 
         logger.info("Suscriptor iniciado correctamente")
