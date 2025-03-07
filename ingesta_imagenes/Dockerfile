@@ -11,10 +11,8 @@ COPY . .
 RUN pip install --upgrade --no-cache-dir "pip<24.1" setuptools wheel
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
-
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 
 # Run the application
-CMD ["python", "src/api/api.py"]
+CMD ["python", "src/main.py"]

@@ -10,6 +10,7 @@ from src.api.v1.router import router as v1
 from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizada
 import requests
 import os
+from api.v1.ingestar import router as ingestar_imagen
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 class Config(BaseSettings):
@@ -84,44 +85,8 @@ async def login(request: Request):
     except Exception as e:
         return {"error": str(e), "status_code": 500}
 
-@app.post('/bff/ingesta-imagen')
-async def ingesta_imagen(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    image: UploadFile = File(...),
-    proveedor: str = Form(...)
-):
-    try:
-        # Prepare the multipart form data
-        files = {
-            'image': (image.filename, await image.read(), image.content_type)
-        }
-        form_data = {
-            'proveedor': proveedor
-        }
-        
-        # Forward the request to the ingesta service with the token
-        token = credentials.credentials
-        headers = {
-            "Authorization": f"Bearer {token}"
-        }
-        
-        response = requests.post(
-            f"{settings.INGESTA_SERVICE_URL}/ingesta-imagen",
-            files=files,
-            data=form_data,
-            headers=headers
-        )
-        
-        # Check if the request was successful
-        if response.status_code >= 400:
-            return {"error": response.text, "status_code": response.status_code}
-        
-        # Return the ingesta service response
-        return response.json()
-    except Exception as e:
-        return {"error": str(e), "status_code": 500}
-
 app.include_router(v1, prefix="/bff/v1")
+app.include_router(ingestar_imagen, prefix="/bff/v1")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
