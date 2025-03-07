@@ -10,7 +10,8 @@ import logging
 from src.infraestructura.dto import DTOImagenAnonimizada
 from src.infraestructura.respositorios import RepositorioImagenesAnonimizadasSQLAlchemy
 from src.infraestructura.despachadores import Despachador
-from src.infraestructura.schema.v1.eventos import  ImagenAnonimizadaPayload
+from src.infraestructura.schema.v1.eventos import  ImagenAnonimizadaPayload,EventoIntegracionImagenAnonimizada
+from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -61,13 +62,16 @@ def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:st
 
         #TODO mejorar implementacion de publicacion de eventos
         despachador = Despachador()
-        evento=ImagenAnonimizadaPayload(
+        payload=ImagenAnonimizadaPayload(
             id_imagen="1",
             filename=nombre_imagen_origen,
             size=str(binary_image_data.getbuffer().nbytes),
             fecha_creacion="2021-08-01"
         )
-        despachador.publicar_evento(evento,"eventos-anonimizador")
+
+        avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
+        evento_integracion=EventoIntegracionImagenAnonimizada(payload=payload)
+        despachador.publicar_evento(evento_integracion,"eventos-anonimizador",avro_schema=avro_schema)
 
 
         imagen_dto = DTOImagenAnonimizada(

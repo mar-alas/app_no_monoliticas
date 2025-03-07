@@ -3,6 +3,7 @@ from pulsar.schema import *
 
 from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizada, ImagenAnonimizadaPayload
 from src.seedwork.infraestructura import utils
+from src.seedwork.infraestructura.schema.v1.eventos import EventoIntegracion
 
 import datetime
 
@@ -18,7 +19,5 @@ class Despachador:
         publicador.send(mensaje)
         cliente.close()
 
-    def publicar_evento(self, evento:ImagenAnonimizadaPayload, topico):
-        payload = evento
-        evento_integracion = EventoIntegracionImagenAnonimizada(data=payload)
-        self._publicar_mensaje(evento_integracion, topico, AvroSchema(EventoIntegracionImagenAnonimizada))
+    def publicar_evento(self, evento_integracion:EventoIntegracion, topico,avro_schema):
+        self._publicar_mensaje(evento_integracion, topico, avro_schema)
