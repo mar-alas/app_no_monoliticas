@@ -28,3 +28,15 @@ class EventoIntegracionImagenAnonimizada(EventoIntegracion):
     event_name= String(default="ImagenAnonimizada")
     specversion = String(default="v1")
     data = ImagenAnonimizadaPayload()
+
+class ImagenIngestadaPayload(Record):
+    id_imagen = String()
+    filename = String()
+    size = String()
+    fecha_creacion = String()
+
+class EventoIntegracionImagenIngestada(EventoIntegracion):
+    service_name = String(default="ingesta_imagenes")
+    event_name= String(default="ImagenIngestada")
+    specversion = String(default="v1")
+    data = ImagenIngestadaPayload()
