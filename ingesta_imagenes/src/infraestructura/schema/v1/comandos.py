@@ -35,3 +35,9 @@ class ComandoAnonimizarImagen(ComandoIntegracion):
     datacontenttype = String()
     service_name = String(default="anonimizacion_imagenes")
     data = AnonimizarImagenPayload()
+
+class IngestaRollbackPayload(ComandoIntegracion):
+    id = String()
+
+class ComandoIngestaRollback(ComandoIntegracion):
+    data = IngestaRollbackPayload()
