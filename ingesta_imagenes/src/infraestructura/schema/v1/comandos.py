@@ -16,7 +16,7 @@ class IngestaImagenPayload(ComandoIntegracion):
 class ComandoIngestaImagen(ComandoIntegracion):
     data = IngestaImagenPayload()
 
-class AnonimizarImagen(Record):
+class AnonimizarImagenPayload(Record):
     id_usuario = String()
     fecha_creacion= Long()
     id = String()
@@ -33,7 +33,4 @@ class ComandoAnonimizarImagen(ComandoIntegracion):
     type = String(default="AnonimizarImagen")
     datacontenttype = String()
     service_name = String(default="anonimizacion_imagenes")
-    data = AnonimizarImagen
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    data = AnonimizarImagenPayload()
