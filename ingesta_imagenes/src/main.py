@@ -9,8 +9,8 @@ import pulsar
 import base64
 from io import BytesIO
 from src.infraestructura.despachadores import Despachador
-from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload
-
+from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload,EventoIntegracionImagenIngestada
+from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,9 +36,13 @@ def process_message(data: bytes):
         servicio = ServicioIngestaImagen()
         servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
         despachador=Despachador()
+
         payload=ImagenIngestadaPayload(
         )
-        despachador.publicar_evento(payload,topico="eventos-ingesta")
+        evento_integracion = EventoIntegracionImagenIngestada(data=payload)
+        avro_schema=AvroSchema(EventoIntegracionImagenIngestada)
+
+        despachador.publicar_evento(evento=evento_integracion,topico="eventos-ingesta",avro_schema=avro_schema)
         logger.info("Publicado evento de imagen ingesta")
         logger.info(f"Processed message: {message_dict['id']}")
     except Exception as e:
