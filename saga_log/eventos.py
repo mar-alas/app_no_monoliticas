@@ -55,3 +55,19 @@ class EventoIntegracionImagenAnonimizadaEliminada(EventoIntegracion):
     event_name= String(default="ImagenAnonimizadaEliminada")
     specversion = String(default="v1")
     data = ImagenAnonimizadaPayload()
+
+
+class VerificacionResultadoPayload(Record):
+    id_verificacion = String()
+    id_imagen = String()
+    filename = String()
+    resultado = String()  # "APROBADA" o "RECHAZADA"
+    detalle = String()
+    fecha_verificacion = String()
+
+
+class EventoIntegracionVerificacionCompletada(EventoIntegracion):
+    service_name = String(default="verificacion_anonimizacion")
+    event_name= String(default="ImagenVerificada")
+    specversion = String(default="v1")
+    data = VerificacionResultadoPayload()

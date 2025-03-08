@@ -13,6 +13,7 @@ class VerificacionResultadoPayload(Record):
 # Evento de integración para la verificación completada
 class EventoIntegracionVerificacionCompletada(EventoIntegracion):
     service_name = String(default="verificacion_anonimizacion")
+    event_name= String(default="ImagenVerificada")
     specversion = String(default="v1")
     data = VerificacionResultadoPayload()
 
