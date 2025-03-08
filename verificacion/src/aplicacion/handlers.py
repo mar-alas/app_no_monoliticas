@@ -91,8 +91,6 @@ class HandlerVerificacionIntegracion(Handler):
                     
                     avro_schema=AvroSchema(EventoIntegracionVerificacionCompletada)
 
-                    # Publicar evento
-                    despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
                     
                     # Registrar evento enviado
                     RastreadorEventos.registrar_evento_enviado(
@@ -104,11 +102,17 @@ class HandlerVerificacionIntegracion(Handler):
                     logger.info(f"Evento de resultado de verificación publicado para imagen {id_imagen}_{filename}")
                     
                     if resultado_verificacion["resultado"] == "APROBADA":
+                        evento_integracion.event_name="VerificacionExitosa"
+                        despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
+                    
                         #TODO emitir evento de fin de saga
                         payload = FinSagaPayload(mensaje="Fin saga")
                         evento_integracion = EventoIntegracionFinSaga(data=payload)
                         avro_schema=AvroSchema(EventoIntegracionFinSaga)
                         despachador.publicar_evento(evento_integracion, 'eventos-fin-saga',avro_schema)
+                    else:
+                        evento_integracion.event_name="VerificacionFallida"
+                        despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
 
                     # Registrar evento procesado exitosamente
                     medidor.detener()
