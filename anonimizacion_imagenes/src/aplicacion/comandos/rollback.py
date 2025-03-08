@@ -34,11 +34,6 @@ def rollback(mensaje: dict):
             avro_schema=AvroSchema(ComandoIngestaRollback)
         )
 
-        despachador.publicar_evento(
-            evento_integracion=ComandoIngestaRollback(),
-            topico='comando_ingestar_imagenes_rollback',
-            avro_schema=AvroSchema(ComandoIngestaRollback)
-        )
         
     except Exception as e:
         logger.error(f"Error procesando comando de ingesta: {str(e)}")
