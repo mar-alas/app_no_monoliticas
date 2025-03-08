@@ -13,3 +13,9 @@ class IngestaImagenPayload(ComandoIntegracion):
 
 class ComandoIngestaImagen(ComandoIntegracion):
     data = IngestaImagenPayload()
+
+class AnonimizacionRollbackPayload(ComandoIntegracion):
+    id = String()
+
+class ComandoAnonimizacionRollback(ComandoIntegracion):
+    data = AnonimizacionRollbackPayload()
