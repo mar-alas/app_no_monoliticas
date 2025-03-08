@@ -100,7 +100,8 @@ class HandlerVerificacionIntegracion(Handler):
                     )
                     
                     logger.info(f"Evento de resultado de verificación publicado para imagen {id_imagen}_{filename}")
-                    
+                    logger.info(f"Resultado de la verificacion {resultado_verificacion['resultado']}")
+
                     if resultado_verificacion["resultado"] == "APROBADA":
                         evento_integracion.event_name="VerificacionExitosa"
                         despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)

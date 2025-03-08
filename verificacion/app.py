@@ -23,7 +23,7 @@ def create_app():
     DB_USERNAME = os.getenv('DB_USERNAME', default="user")
     DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
     DB_HOSTNAME = os.getenv('DB_HOSTNAME', default="localhost")
-    DB_PORT = os.getenv('DB_PORT', default="5432")
+    DB_PORT = os.getenv('DB_PORT', default="9003")
     
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/verificacion_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
