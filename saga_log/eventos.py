@@ -24,6 +24,7 @@ class ImagenAnonimizadaPayload(Record):
     fecha_creacion = String()
 
 class EventoIntegracionImagenAnonimizada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_anonimizacion")
     service_name = String(default="anonimizacion_imagenes")
     event_name= String(default="ImagenAnonimizada")
     specversion = String(default="v1")
@@ -36,6 +37,7 @@ class ImagenIngestadaPayload(Record):
     fecha_creacion = String()
 
 class EventoIntegracionImagenIngestada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_ingesta")
     service_name = String(default="ingesta_imagenes")
     event_name= String(default="ImagenIngestada")
     specversion = String(default="v1")
@@ -52,6 +54,7 @@ class EventoIntegracionInicioSaga(EventoIntegracion):
     data = InicioSagaPayload()
 
 class EventoIntegracionImagenAnonimizadaEliminada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_anonimizacion")
     service_name = String(default="anonimizacion_imagenes")
     event_name= String(default="ImagenAnonimizadaEliminada")
     specversion = String(default="v1")
@@ -68,6 +71,7 @@ class VerificacionResultadoPayload(Record):
 
 
 class EventoIntegracionVerificacionCompletada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_anonimizacion")
     service_name = String(default="verificacion_anonimizacion")
     event_name= String(default="ImagenVerificada")
     specversion = String(default="v1")
@@ -77,6 +81,7 @@ class FinSagaPayload(Record):
     mensaje = String()
 
 class EventoIntegracionFinSaga(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_anonimizacion")
     service_name = String(default="bff")
     event_name= String(default="FinSaga")
     specversion = String(default="v1")
@@ -84,6 +89,7 @@ class EventoIntegracionFinSaga(EventoIntegracion):
 
 
 class EventoIntegracionImagenIngestadaEliminada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_ingesta")
     service_name = String(default="ingesta_imagenes")
     event_name= String(default="ImagenIngestada")
     specversion = String(default="v1")
