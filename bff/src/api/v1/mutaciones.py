@@ -7,6 +7,8 @@ from strawberry.types import Info
 from src import utils
 from src.despachadores import Despachador
 from .esquemas import *
+from src.infraestructura.schema.v1.comandos import ComandoIngestaImagen, IngestaImagenPayload
+from pulsar.schema import AvroSchema
 
 @strawberry.type
 class Mutation:
@@ -25,6 +27,7 @@ class Mutation:
             # Generar un ID único para esta operación
             id_comando = str(uuid.uuid4())
             
+            #TODO eliminar y ordenar
             # Preparar payload del comando
             payload = {
                 "imagen": imagen_base64,
@@ -35,24 +38,26 @@ class Mutation:
             }
             
             # Estructura del comando
-            comando = {
-                "id": id_comando,
-                "time": utils.time_millis(),
-                "specversion": "v1",
-                "type": "ComandoIngestaImagen",
-                "datacontenttype": "AVRO",
-                "service_name": "BFF GraphQL",
-                "data": payload
-            }
+            # comando = {
+            #     "id": id_comando,
+            #     "time": utils.time_millis(),
+            #     "specversion": "v1",
+            #     "type": "ComandoIngestaImagen",
+            #     "datacontenttype": "AVRO",
+            #     "service_name": "BFF GraphQL",
+            #     "data": payload
+            # }
+            payload=IngestaImagenPayload(**payload)
+            comando=ComandoIngestaImagen(data=payload)
+            avro_schema=AvroSchema(ComandoIngestaImagen)
             
             # Publicar el comando en la cola
-            despachador = Despachador()
-            await despachador.publicar_mensaje(
-                comando,
-                "comando_ingestar_imagenes",
-                "public/default/comando_ingestar_imagenes"
+            despachador2 = Despachador()
+            await despachador2.publicar_mensaje_avro(
+                mensaje=comando,
+                topico="comando_ingestar_imagenes",
+                avro_schema=avro_schema
             )
-            # return "Mensaje procesado"
             
             return IngestaRespuesta(
                 mensaje=f"Comando enviado a la cola con ID: {id_comando}",

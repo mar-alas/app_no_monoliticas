@@ -3,7 +3,7 @@ from pulsar.schema import *
 from . import utils
 from src.infraestructura.schema.v1.comandos import ComandoIngestaImagen, IngestaImagenPayload
 import json
-
+from src.seedwork.infraestructura.schema.v1.eventos import EventoIntegracion
 class Despachador:
     async def publicar_mensaje(self, mensaje, topico, schema):
         try:
@@ -86,3 +86,13 @@ class Despachador:
     #     except Exception as e:
     #         print(f"Error al publicar mensaje: {e}")
     #         raise
+
+    class Despachador2:
+        def _publicar_mensaje(self, mensaje, topico, schema):
+            cliente = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
+            publicador = cliente.create_producer(topico, schema=schema)
+            publicador.send(mensaje)
+            cliente.close()
+
+        def publicar_mensaje_avro(self, evento_integracion:EventoIntegracion, topico,avro_schema):
+            self._publicar_mensaje(evento_integracion, topico, avro_schema)

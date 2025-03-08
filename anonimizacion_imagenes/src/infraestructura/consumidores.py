@@ -64,3 +64,5 @@ class SuscriptorEventos:
             consumidor.close()
         self.client.close()
         logger.info("Conexión con Pulsar cerrada")
+
+        
