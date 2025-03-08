@@ -6,6 +6,7 @@ db = SQLAlchemy()
 class SagaLog(db.Model):
     __tablename__ = 'saga_logs'
     id = db.Column(db.Integer, primary_key=True)
+    id_correlacion = db.Column(db.String(50))
     evento = db.Column(db.String(50), nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 

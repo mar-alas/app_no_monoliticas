@@ -45,6 +45,7 @@ class InicioSagaPayload(Record):
     mensaje = String()
 
 class EventoIntegracionInicioSaga(EventoIntegracion):
+    id_correlacion = String(default="sin_asignar_inicio_saga")
     service_name = String(default="bff")
     event_name= String(default="InicioSaga")
     specversion = String(default="v1")
