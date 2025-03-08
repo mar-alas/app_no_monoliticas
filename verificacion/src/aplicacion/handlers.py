@@ -1,13 +1,15 @@
 import logging
 import json
+import time
 import uuid
 from datetime import datetime
 
 from src.aplicacion.servicio_verificacion import servicio_verificar_anonimizacion
 from src.seedwork.dominio.eventos import EventoDominio
 from src.infraestructura.despachadores import Despachador
-from src.infraestructura.schema.v1.eventos import VerificacionResultadoPayload
+from src.infraestructura.schema.v1.eventos import EventoIntegracionVerificacionCompletada, VerificacionResultadoPayload
 from src.infraestructura.eventos_utils import RastreadorEventos, MedidorTiempo
+from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -67,7 +69,7 @@ class HandlerVerificacionIntegracion(Handler):
                     despachador = Despachador()
                     
                     # Crear payload del evento
-                    resultado_evento = VerificacionResultadoPayload(
+                    payload = VerificacionResultadoPayload(
                         id_verificacion=str(resultado_verificacion.get('id_verificacion')),
                         id_imagen=id_imagen,
                         filename=filename,
@@ -75,9 +77,21 @@ class HandlerVerificacionIntegracion(Handler):
                         detalle=resultado_verificacion.get('detalle', ''),
                         fecha_verificacion=resultado_verificacion.get('fecha_verificacion')
                     )
+
+                    evento_integracion = EventoIntegracionVerificacionCompletada(
+                        data=payload,
+                        time=int(time.time() * 1000),
+                        ingestion=0,
+                        specversion="v1",
+                        type="VerificacionCompletada",
+                        datacontenttype="application/json",
+                        service_name="verificacion_anonimizacion"
+                    )
                     
+                    avro_schema=AvroSchema(EventoIntegracionVerificacionCompletada)
+
                     # Publicar evento
-                    despachador.publicar_evento(resultado_evento, 'eventos-verificacion')
+                    despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
                     
                     # Registrar evento enviado
                     RastreadorEventos.registrar_evento_enviado(
