@@ -1,6 +1,7 @@
 from src.aplicacion.servicio_ingesta_imagen import ServicioIngestaImagen
 from src.infraestructura.consumidores import PulsarSubscriber
 from src.seedwork.infraestructura.utils import broker_host
+from src.infraestructura.repositorios import RepositorioIngestaSQLite
 import os
 import logging
 import json
@@ -19,7 +20,6 @@ DB_PASSWORD = os.getenv('DB_PASSWORD', default="password")
 DB_HOSTNAME = os.getenv('DB_HOSTNAME', default="localhost")
 DB_PORT = os.getenv('DB_PORT', default="9002")
 
-
 def process_message(data: bytes):
     try:
         print("Mensaje recibido de cola de comandos de ingestar imagen")
@@ -34,18 +34,13 @@ def process_message(data: bytes):
         datos = base64.b64decode(datos_base64)
         datos = BytesIO(base64.b64decode(datos_base64))
         servicio = ServicioIngestaImagen()
-        try:
-            servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
-            logger.info(f"Processed message: {message_dict}")
-        except Exception as e:
-            logger.error(f"Failed to process message: {e}")
-        
+        servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
         despachador=Despachador()
         payload=ImagenIngestadaPayload(
         )
         despachador.publicar_evento(payload,topico="eventos-ingesta")
         logger.info("Publicado evento de imagen ingesta")
-
+        logger.info(f"Processed message: {message_dict['id']}")
     except Exception as e:
         logger.error(f"Failed to process message 2: {e}")
 
@@ -59,4 +54,3 @@ if __name__ == '__main__':
         subscriber.subscribe(process_message)
     except KeyboardInterrupt:
         subscriber.close()
-

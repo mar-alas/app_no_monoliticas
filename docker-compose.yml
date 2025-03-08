@@ -7,6 +7,8 @@ networks:
     driver: bridge
   user:
     driver: bridge
+  verificacion:
+    driver: bridge
 
 services:
   broker:
@@ -167,6 +169,46 @@ services:
       - pulsar
       - anonimizacion
       - user
+
+  verificacion_db:
+    image: postgres:15
+    container_name: verificacion_db
+    profiles: ["verificacion",""]
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: verificacion_db
+    ports:
+      - "9003:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d verificacion_db"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    networks:
+      - verificacion
+
+  verificacion_service:
+    build:
+      context: ./verificacion
+      dockerfile: Dockerfile
+    container_name: verificacion_contenedor
+    profiles: ["verificacion",""]
+    environment:
+      - BROKER_HOST=broker
+      - DB_HOSTNAME=verificacion_db
+      - DB_PORT=5432
+    ports:
+      - "5002:5002"
+    depends_on:
+      broker:
+        condition: service_healthy
+      verificacion_db:
+        condition: service_healthy
+    networks:
+      - verificacion
+      - pulsar
 
 volumes:
   postgres_data:
