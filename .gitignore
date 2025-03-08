@@ -14,3 +14,4 @@ anonimizacion_imagenes/.keys
 *appnomonoliticas.json
 *.db
 bff/venv
+verificacion/venv/*

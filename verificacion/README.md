@@ -29,6 +29,15 @@ Ejecutar con Docker Compose:
 docker-compose up -d verificacion_service
 ```
 
+Ejecutar en local con:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python3 app.py
+```
+
 ## Configuración
 
 El microservicio utiliza las siguientes variables de entorno:

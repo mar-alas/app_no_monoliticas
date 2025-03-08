@@ -38,17 +38,23 @@ class HandlerVerificacionIntegracion(Handler):
             logger.info(f"Procesando evento de imagen anonimizada: {evento_id}")
             
             # Extraer datos necesarios del evento
+            logger.info(f"Datos del evento: {evento.keys()}")
             if 'data' in evento:
-                datos = evento['data']
-                id_imagen = datos.get('id_imagen')
-                filename = datos.get('filename')
-                size = datos.get('size', '0')
+                logger.info(f"Datos del evento: {evento['data']}")
+                payload = evento['data']
+                id_imagen = payload.id_imagen
+                filename = payload.filename
+                size = payload.size
                 
-                if not id_imagen or not filename:
-                    logger.warning("Evento recibido con datos incompletos, falta id_imagen o filename")
+                if not id_imagen:
+                    logger.warning("Evento recibido con datos incompletos, falta id_imagen")
                     RastreadorEventos.registrar_evento_procesado(evento_id, 'FALLIDO_DATOS_INCOMPLETOS')
                     return
-                
+                if not filename:
+                    logger.warning("Evento recibido con datos incompletos, falta el filename")
+                    RastreadorEventos.registrar_evento_procesado(evento_id, 'FALLIDO_DATOS_INCOMPLETOS')
+                    return
+
                 # Asumimos proveedor 'lat' por defecto
                 proveedor = "lat"
                 

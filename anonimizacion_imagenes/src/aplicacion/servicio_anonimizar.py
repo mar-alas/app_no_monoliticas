@@ -70,7 +70,7 @@ def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:st
         )
 
         avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
-        evento_integracion=EventoIntegracionImagenAnonimizada(payload=payload)
+        evento_integracion=EventoIntegracionImagenAnonimizada(data=payload)
         despachador.publicar_evento(evento_integracion,"eventos-anonimizador",avro_schema=avro_schema)
 
 
