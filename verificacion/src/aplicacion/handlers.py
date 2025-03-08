@@ -8,7 +8,7 @@ from src.aplicacion.servicio_verificacion import servicio_verificar_anonimizacio
 from src.seedwork.dominio.eventos import EventoDominio
 from src.infraestructura.despachadores import Despachador
 from src.infraestructura.schema.v1.eventos import EventoIntegracionVerificacionCompletada,VerificacionResultadoPayload,FinSagaPayload,EventoIntegracionFinSaga
-
+from src.infraestructura.schema.v1.comandos import ComandoAnonimizacionRollback
 from src.infraestructura.eventos_utils import RastreadorEventos, MedidorTiempo
 from pulsar.schema import AvroSchema
 
@@ -105,7 +105,6 @@ class HandlerVerificacionIntegracion(Handler):
                         evento_integracion.event_name="VerificacionExitosa"
                         despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
                     
-                        #TODO emitir evento de fin de saga
                         payload = FinSagaPayload(mensaje="Fin saga")
                         evento_integracion = EventoIntegracionFinSaga(data=payload)
                         avro_schema=AvroSchema(EventoIntegracionFinSaga)
@@ -113,6 +112,10 @@ class HandlerVerificacionIntegracion(Handler):
                     else:
                         evento_integracion.event_name="VerificacionFallida"
                         despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
+
+                        comando=ComandoAnonimizacionRollback()
+                        avro_schema=AvroSchema(ComandoAnonimizacionRollback)
+                        despachador.publicar_evento(comando, 'comando_anonimizacion_imagenes_rollback',avro_schema)
 
                     # Registrar evento procesado exitosamente
                     medidor.detener()
