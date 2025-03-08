@@ -33,10 +33,7 @@ def process_message(data: bytes):
         servicio = ServicioIngestaImagen()
         servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
 
-        repo = RepositorioIngestaSQLite()
-        repo.agregar(servicio)
-
-        logger.info(f"Processed message: {message_dict}")
+        logger.info(f"Processed message: {message_dict['id']}")
     except Exception as e:
         logger.error(f"Failed to process message: {e}")
 
