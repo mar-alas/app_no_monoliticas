@@ -22,7 +22,7 @@ class AnonimizarImagenPayload(Record):
     id = String()
     filename = String()
     size = String()
-    binario = String()
+    binario_url = String()
     mimetype = String()
 
 class ComandoAnonimizarImagen(ComandoIntegracion):
