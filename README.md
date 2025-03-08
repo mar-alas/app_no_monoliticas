@@ -102,3 +102,57 @@ con el siguiente comando se puede borrar un topico:
 ```bash
 docker exec -it broker bin/pulsar-admin topics delete persistent://public/default/eventos-anonimizador
 ```
+
+
+## Para correr los microservicios en local:
+
+sobre la raiz de anonimizacion:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python3 app.py
+```
+
+sobre la raiz de ingesta:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+ export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 src/main.py
+```
+
+sobre la raiz de verificacion:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 app.py
+```
+
+
+sobre la raiz de bff:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 src/main.py
+```
+
+
+sobre la raiz de saga log:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 app.py
+```
