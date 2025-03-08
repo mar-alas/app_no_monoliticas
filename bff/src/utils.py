@@ -27,7 +27,7 @@ def consultar_schema_registry(topico: str) -> dict:
     """Consulta el schema del registro"""
     try:
         import requests
-        json_registry = requests.get(f'http://{broker_host()}:8080/admin/v2/schemas/{topico}/schema')
+        json_registry = requests.get(f'http://{broker_host()}:6650/admin/v2/schemas/{topico}/schema')
         if json_registry.status_code != 200:
             raise Exception(f"Error al obtener schema: {json_registry.status_code}")
         return json.loads(json_registry.json().get('data', '{}'))

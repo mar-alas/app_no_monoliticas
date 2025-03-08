@@ -1,18 +1,14 @@
-from src.config.db import db
 from src.dominio.fabricas import FabricaIngestaImagenes
 from src.dominio.entidades import Ingesta
 from src.dominio.repositorios import RepositorioIngesta
-from src.infraestructura.dto import IngestaImagenes
-# from .mapeadores import MapperIngesta
-
+from src.infraestructura.dto import IngestaImagenes, Session
 from uuid import UUID
-import os
 from datetime import datetime
 
 class RepositorioIngestaSQLite(RepositorioIngesta):
     def __init__(self):
         self._ingesta_imagen: FabricaIngestaImagenes = FabricaIngestaImagenes()
-        self.db = db
+        self.session = Session()
 
     @property
     def ingesta_imagen(self):
@@ -34,25 +30,23 @@ class RepositorioIngestaSQLite(RepositorioIngesta):
         )
         return ingesta_dto
 
-
     def agregar(self, entity: Ingesta):
         ingesta_dto = self.entidad_a_dto(entity)
-        self.db.session.add(ingesta_dto)
-        self.db.session.commit()
-
+        self.session.add(ingesta_dto)
+        self.session.commit()
 
     def actualizar(self, entity: Ingesta):
-        ingesta_imagen = self.ingesta_imagen.crear_objeto(Ingesta)
-        self.db.session.merge(ingesta_imagen)
-        self.db.session.commit()
+        ingesta_dto = self.entidad_a_dto(entity)
+        self.session.merge(ingesta_dto)
+        self.session.commit()
 
     def eliminar(self, entity: Ingesta):
-        ingesta_imagen = self.ingesta_imagen.crear_objeto(Ingesta)
-        self.db.session.delete(ingesta_imagen)
-        self.db.session.commit()
+        ingesta_dto = self.entidad_a_dto(entity)
+        self.session.delete(ingesta_dto)
+        self.session.commit()
 
     def obtener_por_id(self, id: UUID) -> Ingesta:
-        return self.db.session.query(Ingesta).filter_by(id=id).first()
+        return self.session.query(IngestaImagenes).filter_by(id=id).first()
     
     def obtener_todos(self):
-        return super().obtener_todos()
+        return self.session.query(IngestaImagenes).all()
