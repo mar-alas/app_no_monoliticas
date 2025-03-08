@@ -64,6 +64,11 @@ docker exec -it broker bin/pulsar-client consume persistent://public/default/eve
 ```
 
 ```bash
+docker exec -it broker bin/pulsar-client consume persistent://public/default/eventos-anonimizador-rollback -s my-subscription -n 0
+```
+
+
+```bash
 docker exec -it broker bin/pulsar-client consume persistent://public/default/comando_anonimizacion_imagenes -s my-subscription -n 0
 ```
 
@@ -85,7 +90,7 @@ bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my
 
 con el siguiente comando se puede mandar un mensaje de prueba a un topico:
 ```bash
-docker exec -it broker bin/pulsar-client produce persistent://public/default/comando_anonimizacion_imagenes_rollback -m "{hacer rollback}
+docker exec -it broker bin/pulsar-client produce persistent://public/default/comando_anonimizacion_imagenes_rollback -m "{hacer rollback}"
 ```
 
 con el siguiente comando se puede conocer el esquema:

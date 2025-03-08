@@ -12,3 +12,9 @@ class EventoIntegracionImagenAnonimizada(EventoIntegracion):
     event_name= String(default="ImagenAnonimizada")
     specversion = String(default="v1")
     data = ImagenAnonimizadaPayload()
+
+class EventoIntegracionImagenAnonimizadaEliminada(EventoIntegracion):
+    service_name = String(default="anonimizacion_imagenes")
+    event_name= String(default="ImagenAnonimizadaEliminada")
+    specversion = String(default="v1")
+    data = ImagenAnonimizadaPayload()
