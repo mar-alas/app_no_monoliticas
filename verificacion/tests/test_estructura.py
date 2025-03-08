@@ -12,7 +12,7 @@ def test_estructura():
     try:
         logger.info("Probando importaciones básicas...")
         
-        # Probar importaciones de módulos principales
+        # Probar importaciones de módulos
         from src.infraestructura.despachadores import Despachador
         from src.aplicacion.servicio_verificacion import servicio_verificar_anonimizacion
         from src.infraestructura.repositorios import RepositorioVerificacionesSQLAlchemy
@@ -20,7 +20,7 @@ def test_estructura():
         
         logger.info("✅ Importaciones básicas exitosas")
         
-        # Probar la creación de instancias
+        # Probar creación de instancias
         despachador = Despachador()
         logger.info("✅ Creación de despachador exitosa")
         

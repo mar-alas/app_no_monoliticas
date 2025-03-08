@@ -27,15 +27,13 @@ def test_flujo_completo():
     3. Suscribe a eventos de verificación y verifica el resultado
     """
     try:
-        # Configuración del broker
         broker_host = os.getenv('BROKER_HOST', 'localhost')
         broker_url = f'pulsar://{broker_host}:6650'
         logger.info(f"Conectando al broker en: {broker_url}")
         
-        # Crear cliente Pulsar
         client = pulsar.Client(broker_url)
         
-        # Generar IDs únicos para esta prueba
+        # Generar IDs únicos prueba
         test_id = str(uuid.uuid4())[:8]
         id_imagen = f"test-{test_id}"
         filename = "f9814db7-71f6-44ea-94a8-64b5082b7ac4_test_image.jpeg"
@@ -79,11 +77,10 @@ def test_flujo_completo():
                 # Decodificar el mensaje
                 datos = json.loads(mensaje_recibido.data().decode('utf-8'))
                 
-                # Verificar si corresponde a nuestra imagen de prueba
+                # Verificar si corresponde a la imagen 
                 if 'data' in datos and datos['data'].get('id_imagen') == id_imagen:
                     logger.info("¡Evento de verificación recibido para nuestra imagen de prueba!")
                     
-                    # Mostrar detalles
                     resultado = datos['data'].get('resultado', 'DESCONOCIDO')
                     detalle = datos['data'].get('detalle', '')
                     logger.info(f"Resultado: {resultado}")
@@ -94,7 +91,6 @@ def test_flujo_completo():
                     verificacion_recibida = True
                     return True
                 else:
-                    # No es nuestro evento, seguir buscando
                     consumer.acknowledge(mensaje_recibido)
                     return False
             except Exception as e:
@@ -121,10 +117,9 @@ def test_flujo_completo():
                 # Timeout o error, continuar esperando
                 pass
         
-        # Cerrar consumidor
         consumer.close()
         
-        # Verificar resultado
+        # Verificar
         if verificacion_recibida:
             logger.info("✅ Prueba de flujo completo exitosa")
             return True

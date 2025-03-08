@@ -8,23 +8,18 @@ logger = logging.getLogger(__name__)
 def test_broker_connection():
     """Prueba la conexión al broker de Pulsar"""
     try:
-        # Obtener el host del broker desde las variables de entorno
         broker_host = os.getenv('BROKER_HOST', 'localhost')
         broker_url = f'pulsar://{broker_host}:6650'
         
         logger.info(f"Conectando al broker en: {broker_url}")
         
-        # Crear un cliente Pulsar
         client = pulsar.Client(broker_url)
-        
-        # Crear un productor de prueba
         producer = client.create_producer('test-topic')
         
-        # Publicar un mensaje de prueba
+        # Publicar mensaje
         producer.send("Mensaje de prueba de conexión".encode('utf-8'))
         logger.info("Mensaje de prueba enviado correctamente")
         
-        # Cerrar las conexiones
         producer.close()
         client.close()
         logger.info("Conexión con el broker exitosa y cerrada correctamente")
