@@ -28,6 +28,7 @@ def process_message(data: dict):
         message = data
         message_dict = data
         payload = message_dict["data"]
+        id_correlacion = message_dict["id_correlacion"]
         nombre = payload.nombre
         datos_base64 = payload.imagen
         proveedor = payload.proveedor
@@ -41,7 +42,7 @@ def process_message(data: dict):
 
         payload=ImagenIngestadaPayload(
         )
-        evento_integracion = EventoIntegracionImagenIngestada(data=payload)
+        evento_integracion = EventoIntegracionImagenIngestada(data=payload,id_correlacion=id_correlacion)
         avro_schema=AvroSchema(EventoIntegracionImagenIngestada)
 
         despachador.publicar_evento(evento=evento_integracion,topico="eventos-ingesta",avro_schema=avro_schema)

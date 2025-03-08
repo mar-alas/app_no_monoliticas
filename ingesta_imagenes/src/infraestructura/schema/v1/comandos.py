@@ -12,6 +12,7 @@ class IngestaImagenPayload(Record):
     fecha_creacion= Long()
 
 class ComandoIngestaImagen(ComandoIntegracion):
+    id_correlacion = String(default="sin_asignar")
     id = String()
     time = Long()
     specversion = String()

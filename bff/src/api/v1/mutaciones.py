@@ -9,6 +9,7 @@ from src.despachadores import Despachador
 from .esquemas import *
 from src.infraestructura.schema.v1.comandos import ComandoIngestaImagen, IngestaImagenPayload
 from pulsar.schema import AvroSchema
+import logging
 
 @strawberry.type
 class Mutation:
@@ -18,6 +19,7 @@ class Mutation:
         imagen_base64: str, 
         nombre_imagen: str, 
         proveedor: str = "lat", 
+        id_correlacion:str="sin_asignar_2",
         info: Info = None
     ) -> IngestaRespuesta:
         """
@@ -48,7 +50,7 @@ class Mutation:
             #     "data": payload
             # }
             payload=IngestaImagenPayload(**payload)
-            comando=ComandoIngestaImagen(data=payload)
+            comando=ComandoIngestaImagen(data=payload,id_correlacion=id_correlacion)
             avro_schema=AvroSchema(ComandoIngestaImagen)
             
             # Publicar el comando en la cola
