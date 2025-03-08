@@ -3,6 +3,7 @@ from src.infraestructura.gcp_storage import GCPStorage
 from src.aplicacion.servicio_anonimizar import servicio_anonimizar_imagen
 from src.infraestructura.despachadores import Despachador
 from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizadaEliminada,ImagenAnonimizadaPayload
+from src.infraestructura.schema.v1.comandos import ComandoIngestaRollback
 from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
@@ -25,6 +26,18 @@ def rollback(mensaje: dict):
             evento_integracion=evento_integracion,
             topico='eventos-anonimizador-rollback',
             avro_schema=avro_schema
+        )
+        
+        despachador.publicar_evento(
+            evento_integracion=ComandoIngestaRollback(),
+            topico='comando_ingestar_imagenes_rollback',
+            avro_schema=AvroSchema(ComandoIngestaRollback)
+        )
+
+        despachador.publicar_evento(
+            evento_integracion=ComandoIngestaRollback(),
+            topico='comando_ingestar_imagenes_rollback',
+            avro_schema=AvroSchema(ComandoIngestaRollback)
         )
         
     except Exception as e:

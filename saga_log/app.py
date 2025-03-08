@@ -5,7 +5,7 @@ import logging
 from dto import db, SagaLog,SagaLogSchema
 from servicios import almacenar_saga_log
 from eventos import EventoIntegracionImagenAnonimizada,EventoIntegracionImagenIngestada
-from eventos import EventoIntegracionInicioSaga,EventoIntegracionImagenAnonimizadaEliminada
+from eventos import EventoIntegracionInicioSaga,EventoIntegracionImagenAnonimizadaEliminada,EventoIntegracionImagenIngestadaEliminada
 from eventos import EventoIntegracionVerificacionCompletada,EventoIntegracionFinSaga
 from pulsar.schema import AvroSchema
 
@@ -52,6 +52,15 @@ def iniciar_suscriptor():
             avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
         )
 
+        
+
+        suscriptor.suscribirse_a_topico(
+            topico='eventos-verificacion',
+            subscripcion='sagalog-sub',
+            callback=almacenar_saga_log,
+            avro_schema=AvroSchema(EventoIntegracionVerificacionCompletada)
+        )
+
         suscriptor.suscribirse_a_topico(
             topico='eventos-anonimizador-rollback',
             subscripcion='sagalog-sub',
@@ -60,10 +69,10 @@ def iniciar_suscriptor():
         )
 
         suscriptor.suscribirse_a_topico(
-            topico='eventos-verificacion',
+            topico='eventos-ingesta-rollback',
             subscripcion='sagalog-sub',
             callback=almacenar_saga_log,
-            avro_schema=AvroSchema(EventoIntegracionVerificacionCompletada)
+            avro_schema=AvroSchema(EventoIntegracionImagenIngestadaEliminada)
         )
 
         suscriptor.suscribirse_a_topico(

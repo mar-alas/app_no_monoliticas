@@ -80,3 +80,10 @@ class EventoIntegracionFinSaga(EventoIntegracion):
     event_name= String(default="FinSaga")
     specversion = String(default="v1")
     data = FinSagaPayload()
+
+
+class EventoIntegracionImagenIngestadaEliminada(EventoIntegracion):
+    service_name = String(default="ingesta_imagenes")
+    event_name= String(default="ImagenIngestada")
+    specversion = String(default="v1")
+    data = ImagenIngestadaPayload()

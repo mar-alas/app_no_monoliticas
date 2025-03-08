@@ -10,8 +10,8 @@ import pulsar
 import base64
 from io import BytesIO
 from src.infraestructura.despachadores import Despachador
-from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload,EventoIntegracionImagenIngestada
-from src.infraestructura.schema.v1.comandos import ComandoAnonimizarImagen,AnonimizarImagenPayload,ComandoIngestaImagen
+from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload,EventoIntegracionImagenIngestada,EventoIntegracionImagenIngestadaEliminada,EventoIntegracionFinSaga
+from src.infraestructura.schema.v1.comandos import ComandoAnonimizarImagen,AnonimizarImagenPayload,ComandoIngestaImagen,ComandoIngestaRollback
 from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
@@ -65,6 +65,21 @@ def process_message(data: dict):
     except Exception as e:
         logger.error(f"Failed to process message 2: {e}")
 
+def rollback(data: dict):
+    try:
+        print("Mensaje recibido de cola de comandos de rollback")
+        despachador=Despachador()
+        despachador.publicar_evento(evento=EventoIntegracionImagenIngestadaEliminada(event_name="ImagenIngestadaEliminada"),
+                                    topico="eventos-ingesta-rollback",
+                                    avro_schema=AvroSchema(EventoIntegracionImagenIngestadaEliminada))
+    
+        despachador.publicar_evento(evento=EventoIntegracionFinSaga(service_name="ingesta_imagenes"),
+                                    topico="eventos-fin-saga",
+                                    avro_schema=AvroSchema(EventoIntegracionFinSaga))
+    except Exception as e:
+        logger.error(f"Failed to rollback: {e}")
+
+
 def iniciar_suscriptor():
     """Inicializa y configura el suscriptor de eventos"""
     global suscriptor
@@ -77,6 +92,13 @@ def iniciar_suscriptor():
             'ingesta-sub',
             process_message,
             avro_schema=AvroSchema(ComandoIngestaImagen)
+        )
+
+        suscriptor.suscribirse_a_topico(
+            'comando_ingestar_imagenes_rollback',
+            'ingesta-sub',
+            rollback,
+            avro_schema=AvroSchema(ComandoIngestaRollback)
         )
 
         logger.info("Suscriptor iniciado correctamente")
