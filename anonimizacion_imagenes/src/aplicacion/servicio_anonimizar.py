@@ -16,7 +16,7 @@ from pulsar.schema import AvroSchema
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:str,binary_image:BytesIO)->BytesIO:
+def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:str,binary_image:BytesIO,id_correlacion:str)->BytesIO:
     try:
         if not ImagenDeAnonimizacionEsValida(binary_image).es_valido():
             raise ValueError("Imagén de anonimización no válida")
@@ -70,7 +70,7 @@ def servicio_anonimizar_imagen(nombre_imagen_origen:str,nombre_imagen_destino:st
         )
 
         avro_schema=AvroSchema(EventoIntegracionImagenAnonimizada)
-        evento_integracion=EventoIntegracionImagenAnonimizada(data=payload)
+        evento_integracion=EventoIntegracionImagenAnonimizada(data=payload,id_correlacion=id_correlacion)
         despachador.publicar_evento(evento_integracion,"eventos-anonimizador",avro_schema=avro_schema)
 
 

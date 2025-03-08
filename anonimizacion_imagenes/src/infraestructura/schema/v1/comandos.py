@@ -22,6 +22,7 @@ class AnonimizarImagenPayload(Record):
     mimetype = String()
 
 class ComandoAnonimizarImagen(ComandoIntegracion):
+    id_correlacion= String(default="sing_asignar")
     id = String(default=str(uuid.uuid4()))
     time = Long()
     ingestion = Long(default=time_millis())

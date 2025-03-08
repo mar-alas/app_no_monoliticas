@@ -59,7 +59,7 @@ def process_message(data: dict):
             mimetype = "image/jpeg"
         )
 
-        evento_integracion = ComandoAnonimizarImagen(data=payload)
+        evento_integracion = ComandoAnonimizarImagen(data=payload,id_correlacion=id_correlacion)
         avro_schema=AvroSchema(ComandoAnonimizarImagen)
         despachador.publicar_evento(evento=evento_integracion,topico="comando_anonimizacion_imagenes",avro_schema=avro_schema)
 
