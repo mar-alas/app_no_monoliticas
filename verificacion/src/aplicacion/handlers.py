@@ -88,6 +88,10 @@ class HandlerVerificacionIntegracion(Handler):
                     
                     logger.info(f"Evento de resultado de verificación publicado para imagen {id_imagen}_{filename}")
                     
+                    if resultado_verificacion["resultado"] == "APROBADA":
+                        #TODO emitir evento de fin de saga
+                        ...
+
                     # Registrar evento procesado exitosamente
                     medidor.detener()
                     RastreadorEventos.registrar_evento_procesado(

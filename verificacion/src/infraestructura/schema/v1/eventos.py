@@ -28,3 +28,12 @@ class EventoIntegracionImagenAnonimizada(EventoIntegracion):
     event_name= String(default="ImagenAnonimizada")
     specversion = String(default="v1")
     data = ImagenAnonimizadaPayload()
+
+class FinSagaPayload(Record):
+    mensaje = String()
+
+class EventoIntegracionFinSaga(EventoIntegracion):
+    service_name = String(default="bff")
+    event_name= String(default="InicioSaga")
+    specversion = String(default="v1")
+    data = FinSagaPayload()
