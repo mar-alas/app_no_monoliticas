@@ -12,7 +12,7 @@ class SuscriptorEventos:
         self.consumidores = []
         self.hilos = []
     
-    def suscribirse_a_topico(self, topico, subscripcion, callback):
+    def suscribirse_a_topico(self, topico, subscripcion, callback,avro_schema):
         """
         Suscribe a un tópico específico de Pulsar
         
@@ -24,7 +24,8 @@ class SuscriptorEventos:
         consumer = self.client.subscribe(
             topico,
             subscription_name=subscripcion,
-            consumer_type=pulsar.ConsumerType.Shared
+            consumer_type=pulsar.ConsumerType.Shared,
+            schema=avro_schema
         )
         
         self.consumidores.append(consumer)
@@ -42,13 +43,11 @@ class SuscriptorEventos:
         while True:
             try:
                 mensaje = consumer.receive()
-                datos = mensaje.data().decode('utf-8')
+                # When using AvroSchema, the value() method returns the deserialized object
+                datos_evento = mensaje.value()
                 
-                # Intenta procesar el mensaje como JSON
-                try:
-                    datos_dict = json.loads(datos)
-                except json.JSONDecodeError:
-                    datos_dict = {"mensaje": datos}
+                # Convert the Avro object to a dictionary
+                datos_dict = datos_evento.__dict__
                 
                 # Ejecuta el callback con los datos recibidos
                 callback(datos_dict)

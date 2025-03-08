@@ -18,16 +18,18 @@ class ServicioIngestaImagen:
         logging.info(f"Procesando imagen {image_id}_{nombre} de proveedor {proveedor}")
         url = self.storage.subir_imagen(f"{image_id}_{nombre}", datos, proveedor)
         logger.info(f"Imagen subida a {url}")
-        dto = IngestaImagenDTO(
-            proveedor=proveedor
-        ,   fecha_creacion=datetime.datetime.now()
-        ,   id=image_id
-        ,   filename=nombre
-        ,   size=str(size)
-        ,   binario_url=url
-        ,   mimetype="image/jpeg"
-        )
-        self.handler.handle(dto)
+        # dto = IngestaImagenDTO(
+        #     proveedor=proveedor
+        # ,   fecha_creacion=datetime.datetime.now()
+        # ,   id=image_id
+        # ,   filename=nombre
+        # ,   size=str(size)
+        # ,   binario_url=url
+        # ,   mimetype="image/jpeg"
+        # )
+        # self.handler.handle(dto)
+
+        return image_id,url
 
         
 

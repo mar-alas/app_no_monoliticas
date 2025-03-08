@@ -1,6 +1,7 @@
+import datetime
 from src.aplicacion.servicio_ingesta_imagen import ServicioIngestaImagen
 from src.infraestructura.consumidores import PulsarSubscriber
-from src.seedwork.infraestructura.utils import broker_host
+from src.seedwork.infraestructura.utils import broker_host, time_millis
 from src.infraestructura.repositorios import RepositorioIngestaSQLite
 import os
 import logging
@@ -10,6 +11,7 @@ import base64
 from io import BytesIO
 from src.infraestructura.despachadores import Despachador
 from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload,EventoIntegracionImagenIngestada
+from src.infraestructura.schema.v1.comandos import ComandoAnonimizarImagen,AnonimizarImagenPayload
 from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +36,7 @@ def process_message(data: bytes):
         datos = base64.b64decode(datos_base64)
         datos = BytesIO(base64.b64decode(datos_base64))
         servicio = ServicioIngestaImagen()
-        servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
+        image_id,url=servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
         despachador=Despachador()
 
         payload=ImagenIngestadaPayload(
@@ -45,6 +47,21 @@ def process_message(data: bytes):
         despachador.publicar_evento(evento=evento_integracion,topico="eventos-ingesta",avro_schema=avro_schema)
         logger.info("Publicado evento de imagen ingesta")
         logger.info(f"Processed message: {message_dict['id']}")
+
+        payload=AnonimizarImagenPayload(
+            proveedor=proveedor,
+            fecha_creacion= time_millis(),
+            id =str(image_id),
+            filename = nombre,
+            size = str(size),
+            binario_url = url,
+            mimetype = "image/jpeg"
+        )
+
+        evento_integracion = ComandoAnonimizarImagen(data=payload)
+        avro_schema=AvroSchema(ComandoAnonimizarImagen)
+        despachador.publicar_evento(evento=evento_integracion,topico="comando_anonimizacion_imagenes",avro_schema=avro_schema)
+
     except Exception as e:
         logger.error(f"Failed to process message 2: {e}")
 

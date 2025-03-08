@@ -24,6 +24,7 @@ class ComandoAnonimizacionRollback(ComandoIntegracion):
 
 class AnonimizarImagenPayload(Record):
     id_usuario = String()
+    proveedor = String()
     fecha_creacion= Long()
     id = String()
     filename = String()

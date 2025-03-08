@@ -18,6 +18,8 @@ from src.seedwork.infraestructura.utils import broker_host
 from src.config.db import init_db, database_connection
 from src.aplicacion.comandos.anonimizar_imagen import procesar_comando_anonimizacion
 from src.aplicacion.comandos.rollback import rollback
+from src.infraestructura.schema.v1.comandos import ComandoAnonimizarImagen, ComandoAnonimizacionRollback
+from pulsar.schema import AvroSchema
 import os
 import psycopg2
 
@@ -39,13 +41,15 @@ def iniciar_suscriptor():
         suscriptor.suscribirse_a_topico(
             'comando_anonimizacion_imagenes',
             'anonimizacion-service-sub',
-            procesar_comando_anonimizacion
+            procesar_comando_anonimizacion,
+            avro_schema=AvroSchema(ComandoAnonimizarImagen)
         )
 
         suscriptor.suscribirse_a_topico(
             'comando_anonimizacion_imagenes_rollback',
             'anonimizacion-service-rollback-sub',
-            rollback
+            rollback,
+            avro_schema=AvroSchema(ComandoAnonimizacionRollback)
         )
 
         logger.info("Suscriptor iniciado correctamente")
