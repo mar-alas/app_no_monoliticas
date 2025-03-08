@@ -77,6 +77,6 @@ class FinSagaPayload(Record):
 
 class EventoIntegracionFinSaga(EventoIntegracion):
     service_name = String(default="bff")
-    event_name= String(default="InicioSaga")
+    event_name= String(default="FinSaga")
     specversion = String(default="v1")
     data = FinSagaPayload()

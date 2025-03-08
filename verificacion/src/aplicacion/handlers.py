@@ -7,7 +7,8 @@ from datetime import datetime
 from src.aplicacion.servicio_verificacion import servicio_verificar_anonimizacion
 from src.seedwork.dominio.eventos import EventoDominio
 from src.infraestructura.despachadores import Despachador
-from src.infraestructura.schema.v1.eventos import EventoIntegracionVerificacionCompletada, VerificacionResultadoPayload
+from src.infraestructura.schema.v1.eventos import EventoIntegracionVerificacionCompletada,VerificacionResultadoPayload,FinSagaPayload,EventoIntegracionFinSaga
+
 from src.infraestructura.eventos_utils import RastreadorEventos, MedidorTiempo
 from pulsar.schema import AvroSchema
 
@@ -104,7 +105,10 @@ class HandlerVerificacionIntegracion(Handler):
                     
                     if resultado_verificacion["resultado"] == "APROBADA":
                         #TODO emitir evento de fin de saga
-                        ...
+                        payload = FinSagaPayload(mensaje="Fin saga")
+                        evento_integracion = EventoIntegracionFinSaga(data=payload)
+                        avro_schema=AvroSchema(EventoIntegracionFinSaga)
+                        despachador.publicar_evento(evento_integracion, 'eventos-fin-saga',avro_schema)
 
                     # Registrar evento procesado exitosamente
                     medidor.detener()
