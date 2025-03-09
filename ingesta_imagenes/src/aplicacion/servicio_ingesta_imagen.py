@@ -13,10 +13,11 @@ class ServicioIngestaImagen:
         self.storage = GCPStorage()
         self.handler = IngestaImagenHandler()
     
-    def procesar_y_enviar(self, nombre: str, datos: bytes, proveedor: str, size: int):
-        image_id = uuid4()
+    def procesar_y_enviar(self, nombre: str, datos: bytes, proveedor: str, size: int,id_correlacion:str):
+        image_id = id_correlacion #uuid4()
         logging.info(f"Procesando imagen {image_id}_{nombre} de proveedor {proveedor}")
-        url = self.storage.subir_imagen(f"{image_id}_{nombre}", datos, proveedor)
+        #url = self.storage.subir_imagen(f"{image_id}_{nombre}", datos, proveedor)
+        url = self.storage.subir_imagen(f"{image_id}.jpeg", datos, proveedor)
         logger.info(f"Imagen subida a {url}")
         # dto = IngestaImagenDTO(
         #     proveedor=proveedor

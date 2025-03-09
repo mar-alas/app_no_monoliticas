@@ -21,7 +21,8 @@ def procesar_comando_anonimizacion(mensaje: dict):
         id=payload.id
         filename=payload.filename
         proveedor=payload.proveedor
-        nombre_imagen_origen=id+"_"+filename
+        #nombre_imagen_origen=id+"_"+filename
+        nombre_imagen_origen=id+".jpeg"
         nombre_imagen_destino='anonimizada_'+ nombre_imagen_origen
         stream_imagen_sin_anomizar= gCPStorage.descargar_imagen(nombre_imagen_origen,proveedor)
         stream_imagen_anonimizada=servicio_anonimizar_imagen(nombre_imagen_origen,nombre_imagen_destino,stream_imagen_sin_anomizar,id_correlacion=id_correlacion)

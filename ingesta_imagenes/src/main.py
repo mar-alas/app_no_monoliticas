@@ -13,6 +13,7 @@ from src.infraestructura.despachadores import Despachador
 from src.infraestructura.schema.v1.eventos import ImagenIngestadaPayload,EventoIntegracionImagenIngestada,EventoIntegracionImagenIngestadaEliminada,EventoIntegracionFinSaga
 from src.infraestructura.schema.v1.comandos import ComandoAnonimizarImagen,AnonimizarImagenPayload,ComandoIngestaImagen,ComandoIngestaRollback
 from pulsar.schema import AvroSchema
+from src.infraestructura.gcp_storage import GCPStorage
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ def process_message(data: dict):
         datos = base64.b64decode(datos_base64)
         datos = BytesIO(base64.b64decode(datos_base64))
         servicio = ServicioIngestaImagen()
-        image_id,url=servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size)
+        image_id,url=servicio.procesar_y_enviar(nombre=nombre, datos=datos, proveedor=proveedor, size=size,id_correlacion=id_correlacion)
         despachador=Despachador()
 
         payload=ImagenIngestadaPayload(
@@ -70,6 +71,12 @@ def rollback(data: dict):
     try:
         print("Mensaje recibido de cola de comandos de rollback")
         id_correlacion = data["id_correlacion"]
+
+        file_name= id_correlacion+".jpeg"
+        gcpstorage = GCPStorage()
+        gcpstorage.eliminar_imagen(file_name,proveedor="lat")
+        logger.info(f"Imagen {file_name} eliminada de GCP Storage")
+
         despachador=Despachador()
         despachador.publicar_evento(evento=EventoIntegracionImagenIngestadaEliminada(event_name="ImagenIngestadaEliminada",id_correlacion=id_correlacion),
                                     topico="eventos-ingesta-rollback",

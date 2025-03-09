@@ -19,6 +19,12 @@ def rollback(mensaje: dict):
     try:
         logger.info(f"Comando de rollback recibido: {mensaje}")
         id_correlacion=mensaje['id_correlacion']
+
+        gCPStorage=GCPStorage()
+        nombre_imagen_destino='anonimizada_'+ id_correlacion + '.jpeg'
+        
+        gCPStorage.eliminar_imagen(nombre_imagen_destino,proveedor='anonimizador')
+
         despachador=Despachador()
         payload=ImagenAnonimizadaPayload()
         evento_integracion=EventoIntegracionImagenAnonimizadaEliminada(payload=payload,id_correlacion=id_correlacion)
