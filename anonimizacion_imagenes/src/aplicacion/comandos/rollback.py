@@ -18,9 +18,10 @@ def rollback(mensaje: dict):
     """
     try:
         logger.info(f"Comando de rollback recibido: {mensaje}")
+        id_correlacion=mensaje['id_correlacion']
         despachador=Despachador()
         payload=ImagenAnonimizadaPayload()
-        evento_integracion=EventoIntegracionImagenAnonimizadaEliminada(payload=payload)
+        evento_integracion=EventoIntegracionImagenAnonimizadaEliminada(payload=payload,id_correlacion=id_correlacion)
         avro_schema=AvroSchema(EventoIntegracionImagenAnonimizadaEliminada)
         despachador.publicar_evento(
             evento_integracion=evento_integracion,

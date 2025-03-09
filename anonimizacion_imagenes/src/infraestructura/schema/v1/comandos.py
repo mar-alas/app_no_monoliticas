@@ -8,7 +8,9 @@ from src.seedwork.infraestructura.utils import time_millis
 class AnonimizacionRollbackPayload(ComandoIntegracion):
     id = String()
 
+
 class ComandoAnonimizacionRollback(ComandoIntegracion):
+    id_correlacion= String(default="sin_asignar")
     data = AnonimizacionRollbackPayload()
 
 class AnonimizarImagenPayload(Record):
