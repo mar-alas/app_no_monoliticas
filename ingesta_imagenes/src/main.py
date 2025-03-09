@@ -1,4 +1,6 @@
 import datetime
+
+from flask import Flask
 from src.aplicacion.servicio_ingesta_imagen import ServicioIngestaImagen
 from src.infraestructura.consumidores import PulsarSubscriber,SuscriptorEventos
 from src.seedwork.infraestructura.utils import broker_host, time_millis
@@ -114,16 +116,12 @@ def iniciar_suscriptor():
     except Exception as e:
         logger.error(f"Error al iniciar suscriptor: {str(e)}")
 
+app = Flask(__name__)
 
+@app.route('/ingesta-imagen/ping', methods=['GET'])
+def ping():
+    return "pong", 200
 
 if __name__ == '__main__':
-    try:
-        iniciar_suscriptor()
-
-        while True:
-            # Sleep to avoid high CPU usage
-            import time
-            time.sleep(1)
-
-    except KeyboardInterrupt:
-        suscriptor.close()
+    iniciar_suscriptor()
+    app.run(host="0.0.0.0",port=5000,debug=True)

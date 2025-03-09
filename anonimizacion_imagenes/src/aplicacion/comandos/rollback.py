@@ -5,6 +5,7 @@ from src.infraestructura.despachadores import Despachador
 from src.infraestructura.schema.v1.eventos import EventoIntegracionImagenAnonimizadaEliminada,ImagenAnonimizadaPayload
 from src.infraestructura.schema.v1.comandos import ComandoIngestaRollback
 from pulsar.schema import AvroSchema
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,7 +24,22 @@ def rollback(mensaje: dict):
         gCPStorage=GCPStorage()
         nombre_imagen_destino='anonimizada_'+ id_correlacion + '.jpeg'
         
-        gCPStorage.eliminar_imagen(nombre_imagen_destino,proveedor='anonimizador')
+        # se intenta eliminar la imagen anonimizada con una politica de retries
+        max_retries = 3
+        retries = 0
+        while retries < max_retries:
+            try:
+                gCPStorage.eliminar_imagen(nombre_imagen_destino, proveedor='anonimizador')
+                logger.info(f"Imagen {nombre_imagen_destino} eliminada con éxito")
+                break
+            except Exception as e:
+                retries += 1
+                if retries < max_retries:
+                    logger.warning(f"Error al eliminar imagen, intento {retries}/{max_retries}: {str(e)}") 
+                    time.sleep(1 * retries)  # Exponential backoff
+                else:
+                    logger.error(f"Error al eliminar imagen después de {max_retries} intentos: {str(e)}")
+                    raise
 
         despachador=Despachador()
         payload=ImagenAnonimizadaPayload()
