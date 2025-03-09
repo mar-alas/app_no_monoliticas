@@ -86,7 +86,28 @@ gcloud sql instances create monoliticas-anonimizacion-db \
   --root-password=monolitic4s-anonimizacion \
   --storage-size=10GB \
   --storage-type=HDD
+
+# Base de datos para el servicio de Verificacion
+gcloud sql instances create monoliticas-verificacion-db \
+  --database-version=POSTGRES_14 \
+  --tier=db-f1-micro \
+  --region=us-central1 \
+  --root-password=monolitic4s-verificacion \
+  --storage-size=10GB \
+  --storage-type=HDD
+
+# Base de datos para el servicio de Ingesta
+gcloud sql instances create monoliticas-ingesta-db \
+  --database-version=POSTGRES_14 \
+  --tier=db-f1-micro \
+  --region=us-central1 \
+  --root-password=monolitic4s-ingesta \
+  --storage-size=10GB \
+  --storage-type=HDD
+
 ```
+
+# Base de datos para el servicio de Verificacion
 
 ### 2. Crear bases de datos en las instancias
 ```bash
@@ -95,6 +116,12 @@ gcloud sql databases create user_db --instance=monoliticas-users-db
 
 # Crear base de datos en la instancia de anonimización
 gcloud sql databases create anonimizacion_db --instance=monoliticas-anonimizacion-db
+
+# Crear base de datos en la instancia de verificacion
+gcloud sql databases create verificacion_db --instance=monoliticas-verificacion-db
+
+# Crear base de datos en la instancia de ingesta
+gcloud sql databases create ingesta_db --instance=monoliticas-ingesta-db
 ```
 
 ### 3. Inicializar la base de datos de usuarios con el esquema (Opcional)
@@ -191,8 +218,8 @@ docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monolitica
 #### Servicio de Anonimización
 ```bash
 cd anonimizacion_imagenes
-docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:4.0 .
-docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:4.0
+docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:1.0 .
+docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/anonimizacion:1.0
 ```
 
 #### Servicio de Ingesta
@@ -202,6 +229,27 @@ docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoli
 docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/ingesta:1.0
 ```
 
+#### BFF
+```bash
+cd ../bff
+docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:1.0 .
+docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:1.0
+```
+
+#### Servicio de Verificacion
+```bash
+cd ../verificacion
+docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/verificacion:1.0 .
+docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/verificacion:1.0
+```
+
+#### Servicio Saga
+```bash
+cd ../saga_log
+docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/saga:2.0 .
+docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/saga:1.0
+```
+
 #### Servicio de Pulsar
 ```bash
 cd ..
@@ -209,26 +257,6 @@ cd ..
 # No es necesario construir
 ```
 
-#### BFF Mobile
-```bash
-cd mobile-bff
-docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/mobile-bff:1.0 .
-docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/mobile-bff:1.0
-```
-
-#### BFF Public
-```bash
-cd public-bff
-docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/public-bff:1.0 .
-docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/public-bff:1.0
-```
-
-#### BFF Web
-```bash
-cd web-bff
-docker build -t us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/web-bff:1.0 .
-docker push us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/web-bff:1.0
-```
 
 ## Despliegue de microservicios
 
@@ -252,9 +280,19 @@ kubectl apply -f deployment/anonimizacion-deployment.yaml
 kubectl apply -f deployment/ingesta-deployment.yaml
 ```
 
-### 5. Desplegar BFFs
+### 4. Desplegar servicio de Verificacion
+```bash
+kubectl apply -f deployment/verificacion-deployment.yaml
+```
+
+### 5. Desplegar BFF
 ```bash
 kubectl apply -f deployment/bff-deployment.yaml
+```
+
+### 5. Desplegar Saga
+```bash
+kubectl apply -f deployment/saga-deployment.yaml
 ```
 
 ## Configuración del Ingress
@@ -287,7 +325,7 @@ gcloud billing budgets create \
   --email-recipients=[CORREO_ELECTRÓNICO]
 ```
 
-### 2. Habilitar Cloud Monitoring
+### 2. Habilitar Cloud Monitoring (Opcional)
 ```bash
 gcloud container clusters update app-no-monoliticas-cluster \
   --enable-stackdriver-kubernetes \

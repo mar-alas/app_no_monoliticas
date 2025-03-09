@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bff
-          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:2.1
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/bff:1.0
           ports:
             - containerPort: 8001
           env:
@@ -25,7 +25,7 @@ spec:
             - name: INGESTA_SERVICE_URL
               value: "http://ingesta-service"
             - name: BROKER_HOST
-              value: "http://pulsar"
+              value: "pulsar"
             - name: USER_AUTH_SERVICE_URL
               value: "http://servicio-manejo-usuarios"
           resources:

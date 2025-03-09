@@ -29,8 +29,8 @@ numpy==2.0.2
 packaging==24.2
 pillow==11.1.0
 pluggy==1.5.0
-pulsar-client==3.6.0
-pulsar-client[avro]==3.6.0
+pulsar-client==3.6.1
+pulsar-client[avro]==3.6.1
 pyclipper==1.3.0.post6
 pytest==8.3.4
 python-bidi==0.6.6
