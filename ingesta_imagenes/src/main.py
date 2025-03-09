@@ -1,4 +1,6 @@
 import datetime
+
+from flask import Flask
 from src.aplicacion.servicio_ingesta_imagen import ServicioIngestaImagen
 from src.infraestructura.consumidores import PulsarSubscriber,SuscriptorEventos
 from src.seedwork.infraestructura.utils import broker_host, time_millis
@@ -114,28 +116,12 @@ def iniciar_suscriptor():
     except Exception as e:
         logger.error(f"Error al iniciar suscriptor: {str(e)}")
 
+app = Flask(__name__)
 
+@app.route('/ingesta-imagen/ping', methods=['GET'])
+def ping():
+    return "pong", 200
 
 if __name__ == '__main__':
-    import signal
-    import sys
-
-    # Define signal handler for graceful shutdown
-    def signal_handler(sig, frame):
-        print("\nShutting down gracefully...")
-        suscriptor.cerrar()
-        sys.exit(0)
-
-    # Register signal handlers
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-
-    try:
-        iniciar_suscriptor()
-        print("Service running. Press Ctrl+C to exit.")
-        # Block until a signal is received
-        signal.pause()
-    except Exception as e:
-        logger.error(f"Error in main process: {str(e)}")
-        if 'suscriptor' in globals():
-            suscriptor.cerrar()
+    iniciar_suscriptor()
+    app.run(host="0.0.0.0",port=5000,debug=True)

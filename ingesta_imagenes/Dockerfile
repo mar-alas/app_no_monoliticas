@@ -14,5 +14,7 @@ RUN pip install -r requirements.txt
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 
+EXPOSE 5000
+
 # Run the application
 CMD ["python", "src/main.py"]
