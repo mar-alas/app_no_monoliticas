@@ -45,6 +45,7 @@ class HandlerVerificacionIntegracion(Handler):
             if 'data' in evento:
                 logger.info(f"Datos del evento: {evento['data']}")
                 payload = evento['data']
+                id_correlacion=evento['id_correlacion']
                 id_imagen = payload.id_imagen
                 filename = payload.filename
                 size = payload.size
@@ -86,7 +87,8 @@ class HandlerVerificacionIntegracion(Handler):
                         specversion="v1",
                         type="VerificacionCompletada",
                         datacontenttype="application/json",
-                        service_name="verificacion_anonimizacion"
+                        service_name="verificacion_anonimizacion",
+                        id_correlacion=id_correlacion,
                     )
                     
                     avro_schema=AvroSchema(EventoIntegracionVerificacionCompletada)
@@ -107,14 +109,14 @@ class HandlerVerificacionIntegracion(Handler):
                         despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
                     
                         payload = FinSagaPayload(mensaje="Fin saga")
-                        evento_integracion = EventoIntegracionFinSaga(data=payload)
+                        evento_integracion = EventoIntegracionFinSaga(data=payload,id_correlacion=id_correlacion)
                         avro_schema=AvroSchema(EventoIntegracionFinSaga)
                         despachador.publicar_evento(evento_integracion, 'eventos-fin-saga',avro_schema)
                     else:
                         evento_integracion.event_name="VerificacionFallida"
                         despachador.publicar_evento(evento_integracion, 'eventos-verificacion',avro_schema)
 
-                        comando=ComandoAnonimizacionRollback()
+                        comando=ComandoAnonimizacionRollback(id_correlacion=id_correlacion)
                         avro_schema=AvroSchema(ComandoAnonimizacionRollback)
                         despachador.publicar_evento(comando, 'comando_anonimizacion_imagenes_rollback',avro_schema)
 
