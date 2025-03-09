@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ingesta
-          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/ingesta:1.1
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/ingesta:1.0
           ports:
             - containerPort: 5000
           env:
@@ -82,7 +82,10 @@ spec:
               path: key.json
         - name: cloudsql-instance-credentials
           secret:
-            secretName: cloudsql-instance-credentials
+            secretName: gcp-credentials
+            items:
+            - key: key.json
+              path: key.json
 ---
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
