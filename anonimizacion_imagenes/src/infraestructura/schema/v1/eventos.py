@@ -8,6 +8,15 @@ class ImagenAnonimizadaPayload(Record):
     fecha_creacion = String()
 
 class EventoIntegracionImagenAnonimizada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_anonimizacion")
     service_name = String(default="anonimizacion_imagenes")
+    event_name= String(default="ImagenAnonimizada")
+    specversion = String(default="v1")
+    data = ImagenAnonimizadaPayload()
+
+class EventoIntegracionImagenAnonimizadaEliminada(EventoIntegracion):
+    id_correlacion= String(default="sin_asignar_anonimizacion")
+    service_name = String(default="anonimizacion_imagenes")
+    event_name= String(default="ImagenAnonimizadaEliminada")
     specversion = String(default="v1")
     data = ImagenAnonimizadaPayload()

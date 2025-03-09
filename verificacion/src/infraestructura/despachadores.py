@@ -7,6 +7,7 @@ from datetime import datetime
 
 from src.infraestructura.schema.v1.eventos import EventoIntegracionVerificacionCompletada, VerificacionResultadoPayload
 from src.infraestructura.eventos_utils import RastreadorEventos, MedidorTiempo
+from src.seedwork.infraestructura.schema.v1.eventos import EventoIntegracion
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -47,31 +48,20 @@ class Despachador:
             medidor.detener()
             raise
 
-    def publicar_evento(self, evento: VerificacionResultadoPayload, topico):
+    def publicar_evento(self, evento: EventoIntegracion, topico,avro_schema):
         """
         Publica un evento de verificación en el tópico especificado
         
         Args:
-            evento: Payload del evento
+            evento: evento de integracion
             topico: Tópico donde publicar
         """
         try:
-            # Timestamp para el evento
-            timestamp = int(time.time() * 1000)
-            
             # Crear evento de integración
-            evento_integracion = EventoIntegracionVerificacionCompletada(
-                data=evento,
-                time=timestamp,
-                ingestion=0,
-                specversion="v1",
-                type="VerificacionCompletada",
-                datacontenttype="application/json",
-                service_name="verificacion_anonimizacion"
-            )
+            evento_integracion = evento
             
             # Publicar el mensaje
-            self._publicar_mensaje(evento_integracion, topico, AvroSchema(EventoIntegracionVerificacionCompletada))
+            self._publicar_mensaje(evento_integracion, topico, avro_schema)
             
             # Registrar el envío del evento
             logger.info(f"Evento {evento_integracion.id} publicado en tópico {topico}")

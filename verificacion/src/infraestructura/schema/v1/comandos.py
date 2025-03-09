@@ -11,3 +11,11 @@ class SolicitarVerificacionPayload(Record):
 # Comando de integración para solicitar una verificación
 class ComandoSolicitarVerificacion(ComandoIntegracion):
     data = SolicitarVerificacionPayload()
+
+class AnonimizacionRollbackPayload(ComandoIntegracion):
+    id = String()
+
+
+class ComandoAnonimizacionRollback(ComandoIntegracion):
+    id_correlacion= String(default="sin_asignar")
+    data = AnonimizacionRollbackPayload()

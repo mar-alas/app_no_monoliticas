@@ -14,3 +14,6 @@ anonimizacion_imagenes/.keys
 *appnomonoliticas.json
 *.db
 bff/venv
+verificacion/venv/*
+*app_no_monoliticas.code-workspace
+saga_log/venv*

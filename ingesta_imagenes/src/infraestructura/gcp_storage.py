@@ -30,3 +30,14 @@ class GCPStorage:
         url = "gs://%s/%s" % (self.bucket_name, nombre)
         logger.info(f"Succesfully uploaded image to {url}")
         return blob.public_url
+    
+    def eliminar_imagen(self, nombre: str, proveedor: str) -> None:
+        if proveedor.lower() in ["usa", "us", "estados unidos", "united states"]:
+            self.bucket_name = "imagenes-usa"
+        else:
+            self.bucket_name = "imagenes-lat"
+        logger.info(f"Eliminando imagen {nombre} de bucket {self.bucket_name}")
+        bucket = self.cliente.bucket(self.bucket_name)
+        blob = bucket.blob(nombre)
+        blob.delete()
+        logger.info(f"Succesfully deleted image {nombre}")

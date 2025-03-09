@@ -48,6 +48,17 @@ class GCPStorage:
         logger.info(f"Succesfully downloaded image {nombre} from {self.bucket_name}")
 
         return datos
+    
+    def eliminar_imagen(self, nombre: str, proveedor: str):
+        if proveedor.lower() in ["usa", "us", "estados unidos", "united states"]:
+            self.bucket_name = "imagenes-usa"
+        else:
+            self.bucket_name = "imagenes-lat"
+        logger.info(f"Eliminando imagen {nombre} de bucket {self.bucket_name}")
+        bucket = self.cliente.bucket(self.bucket_name)
+        blob = bucket.blob(nombre)
+        blob.delete()
+        logger.info(f"Succesfully deleted image {nombre} from {self.bucket_name}")
         
 
         

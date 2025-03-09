@@ -64,6 +64,11 @@ docker exec -it broker bin/pulsar-client consume persistent://public/default/eve
 ```
 
 ```bash
+docker exec -it broker bin/pulsar-client consume persistent://public/default/eventos-anonimizador-rollback -s my-subscription -n 0
+```
+
+
+```bash
 docker exec -it broker bin/pulsar-client consume persistent://public/default/comando_anonimizacion_imagenes -s my-subscription -n 0
 ```
 
@@ -71,8 +76,20 @@ para listar los topicos:
 ```bash
 docker exec -it broker bin/pulsar-admin topics list public/default
 ```
+para borrar topicos:
 
+```bash
+docker exec -it broker bin/pulsar-admin topics delete public/default/eventos-anonimizador
+```
 
+con este se pueden borrar todos los topicos:
+```bash
+docker exec -it broker bash -c "for topic in eventos-bff comando_anonimizacion_imagenes_rollback comando_ingestar_imagenes eventos-fin-saga comando_anonimizacion_imagenes comando_ingestar_imagenes_rollback eventos-anonimizador eventos-ingesta-rollback eventos-ingesta eventos-verificacion; do bin/pulsar-admin topics delete persistent://public/default/\$topic; done"
+```
+
+```bash
+docker exec -it broker bash -c "for topic in eventos-bff comando_anonimizacion_imagenes_rollback comando_ingestar_imagenes eventos-fin-saga comando_anonimizacion_imagenes comando_ingestar_imagenes_rollback eventos-anonimizador eventos-ingesta-rollback eventos-ingesta eventos-verificacion; do bin/pulsar-admin schemas delete persistent://public/default/\$topic; done"
+```
 o con el siguiente comando adentro del contenedor del broker:
 
 ```bash
@@ -81,7 +98,7 @@ bin/pulsar-client consume persistent://public/default/eventos-anonimizador -s my
 
 con el siguiente comando se puede mandar un mensaje de prueba a un topico:
 ```bash
-docker exec -it broker bin/pulsar-client produce persistent://public/default/comando_anonimizacion_imagenes_rollback -m "{hacer rollback}
+docker exec -it broker bin/pulsar-client produce persistent://public/default/comando_anonimizacion_imagenes_rollback -m "{hacer rollback}"
 ```
 
 con el siguiente comando se puede conocer el esquema:
@@ -92,4 +109,58 @@ docker exec -it broker bin/pulsar-admin schemas get persistent://public/default/
 con el siguiente comando se puede borrar un topico:
 ```bash
 docker exec -it broker bin/pulsar-admin topics delete persistent://public/default/eventos-anonimizador
+```
+
+
+## Para correr los microservicios en local:
+
+sobre la raiz de anonimizacion:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python3 app.py
+```
+
+sobre la raiz de ingesta:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+ export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 src/main.py
+```
+
+sobre la raiz de verificacion:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 app.py
+```
+
+
+sobre la raiz de bff:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 src/main.py
+```
+
+
+sobre la raiz de saga log:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python3 app.py
 ```

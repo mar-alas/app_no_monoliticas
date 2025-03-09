@@ -209,6 +209,21 @@ services:
     networks:
       - verificacion
       - pulsar
-
+  saga_log:
+    build: 
+      context: ./saga_log
+      dockerfile: Dockerfile
+    container_name: saga_log_contenedor
+    profiles: ["saga_log",""]
+    environment:
+      - BROKER_HOST=broker
+    ports:
+      - "5003:5003"
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - pulsar
+      
 volumes:
   postgres_data:

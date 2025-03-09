@@ -2,9 +2,12 @@ import pulsar
 import threading
 import json
 import logging
+from eventos import EventoIntegracionImagenAnonimizada
+from pulsar.schema import AvroSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class SuscriptorEventos:
     def __init__(self, broker_url):
@@ -20,6 +23,7 @@ class SuscriptorEventos:
             topico: Nombre del tópico
             subscripcion: Nombre de la subscripción
             callback: Función a ejecutar cuando se recibe un mensaje
+            avro_schema: Esquema Avro para deserializar los mensajes
         """
         consumer = self.client.subscribe(
             topico,
@@ -64,5 +68,3 @@ class SuscriptorEventos:
             consumidor.close()
         self.client.close()
         logger.info("Conexión con Pulsar cerrada")
-
-        
