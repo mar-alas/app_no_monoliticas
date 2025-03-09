@@ -38,4 +38,5 @@ class IngestaRollbackPayload(ComandoIntegracion):
     id = String()
 
 class ComandoIngestaRollback(ComandoIntegracion):
+    id_correlacion= String(default="sin_asignar")
     data = IngestaRollbackPayload()

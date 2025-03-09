@@ -69,12 +69,13 @@ def process_message(data: dict):
 def rollback(data: dict):
     try:
         print("Mensaje recibido de cola de comandos de rollback")
+        id_correlacion = data["id_correlacion"]
         despachador=Despachador()
-        despachador.publicar_evento(evento=EventoIntegracionImagenIngestadaEliminada(event_name="ImagenIngestadaEliminada"),
+        despachador.publicar_evento(evento=EventoIntegracionImagenIngestadaEliminada(event_name="ImagenIngestadaEliminada",id_correlacion=id_correlacion),
                                     topico="eventos-ingesta-rollback",
                                     avro_schema=AvroSchema(EventoIntegracionImagenIngestadaEliminada))
     
-        despachador.publicar_evento(evento=EventoIntegracionFinSaga(service_name="ingesta_imagenes"),
+        despachador.publicar_evento(evento=EventoIntegracionFinSaga(service_name="ingesta_imagenes",id_correlacion=id_correlacion),
                                     topico="eventos-fin-saga",
                                     avro_schema=AvroSchema(EventoIntegracionFinSaga))
     except Exception as e:

@@ -30,7 +30,7 @@ def rollback(mensaje: dict):
         )
         
         despachador.publicar_evento(
-            evento_integracion=ComandoIngestaRollback(),
+            evento_integracion=ComandoIngestaRollback(id_correlacion=id_correlacion),
             topico='comando_ingestar_imagenes_rollback',
             avro_schema=AvroSchema(ComandoIngestaRollback)
         )
