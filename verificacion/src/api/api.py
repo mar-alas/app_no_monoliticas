@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, make_response
 import logging
 from datetime import datetime, timedelta
 import uuid
-
+import os
 from src.infraestructura.repositorios import RepositorioVerificacionesSQLAlchemy
 from src.aplicacion.servicio_verificacion import servicio_verificar_anonimizacion
 from src.infraestructura.eventos_utils import RastreadorEventos, MedidorTiempo
@@ -275,3 +275,10 @@ def metricas():
     except Exception as e:
         logger.error(f"Error al obtener métricas: {str(e)}")
         return jsonify({"error": "Error al obtener métricas"}), 500
+    
+@app.route('/verificacion/cambiar-config', methods=['POST'])
+def cambiar_config():
+    configuracion= request.json["configuracion"]
+    os.environ["CONFIGURACION"]=configuracion #configuracion puede tener valores DEFAULT, FALLA, EXITOSO
+
+    return jsonify({"message": f"Configuracion cambiada exitosamente a {os.environ['CONFIGURACION']}"}), 200
