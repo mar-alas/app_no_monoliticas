@@ -129,7 +129,7 @@ sobre la raiz de ingesta:
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
- export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
 python3 src/main.py
 ```
 

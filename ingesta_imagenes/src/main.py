@@ -117,13 +117,25 @@ def iniciar_suscriptor():
 
 
 if __name__ == '__main__':
+    import signal
+    import sys
+
+    # Define signal handler for graceful shutdown
+    def signal_handler(sig, frame):
+        print("\nShutting down gracefully...")
+        suscriptor.cerrar()
+        sys.exit(0)
+
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     try:
         iniciar_suscriptor()
-
-        while True:
-            # Sleep to avoid high CPU usage
-            import time
-            time.sleep(1)
-
-    except KeyboardInterrupt:
-        suscriptor.close()
+        print("Service running. Press Ctrl+C to exit.")
+        # Block until a signal is received
+        signal.pause()
+    except Exception as e:
+        logger.error(f"Error in main process: {str(e)}")
+        if 'suscriptor' in globals():
+            suscriptor.cerrar()
