@@ -82,6 +82,17 @@ para borrar topicos:
 docker exec -it broker bin/pulsar-admin topics delete public/default/eventos-anonimizador
 ```
 
+para borrar mensajes en topicos con truncate:
+```bash
+docker exec -it broker bin/pulsar-admin topics truncate public/default/comando_ingestar_imagenes
+```
+
+bin/pulsar-admin namespaces get-backlog-size public/default
+
+bin/pulsar-admin topics stats public/default/comando_ingestar_imagenes
+
+bin/pulsar-admin namespaces set-retention public/default --size 300M --time 20m
+
 con este se pueden borrar todos los topicos:
 ```bash
 docker exec -it broker bash -c "for topic in eventos-bff comando_anonimizacion_imagenes_rollback comando_ingestar_imagenes eventos-fin-saga comando_anonimizacion_imagenes comando_ingestar_imagenes_rollback eventos-anonimizador eventos-ingesta-rollback eventos-ingesta eventos-verificacion; do bin/pulsar-admin topics delete persistent://public/default/\$topic; done"

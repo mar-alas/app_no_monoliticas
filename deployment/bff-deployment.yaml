@@ -30,11 +30,11 @@ spec:
               value: "http://servicio-manejo-usuarios"
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: "200Mi"
+              cpu: "400m"
             limits:
-              memory: "256Mi"
-              cpu: "200m"
+              memory: "400Mi"
+              cpu: "500m"
           readinessProbe:
             httpGet:
               path: /bff/ping

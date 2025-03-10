@@ -354,6 +354,29 @@ kubectl logs [nombre-del-pod] -c [nombre-del-contenedor]
 kubectl get events
 ```
 
+### Ingresar a pod
+
+```bash
+kubectl exec -it <pod-name> -- /bin/sh
+```
+
+```bash
+kubectl exec -it saga-786746666-pmfpf -- /bin/sh
+```
+
+```bash
+kubectl exec -it pulsar-f76b4f45c-wtmvw -- /bin/sh
+```
+
+scp saga_logs.db .   
+
+```bash
+kubectl cp <pod-name>:<path-to-file-in-pod> <path-on-local-machine>
+```
+```bash
+kubectl cp saga-786746666-pmfpf:saga_logs.db ./saga_logs.db
+```
+
 ### Problemas de conexión con Cloud SQL
 Si aparecen errores de conexión a la base de datos, verificar:
 1. El estado del contenedor cloud-sql-proxy
