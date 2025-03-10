@@ -89,11 +89,11 @@ def iniciar_suscriptor():
         logger.error(f"Error al iniciar suscriptor: {str(e)}")
 
 
-@app.route('/ping', methods=['GET'])
+@app.route('/saga/ping', methods=['GET'])
 def home():
     return jsonify(message="pong!")
 
-@app.route('/erase', methods=['GET'])
+@app.route('/saga/erase', methods=['GET'])
 def erase():
     session=db.session
     SagaLog.query.delete()
@@ -101,7 +101,7 @@ def erase():
     session.close()
     return jsonify(message="Database tables erased successfully")
 
-@app.route('/get-logs', methods=['GET'])
+@app.route('/saga/get-logs', methods=['GET'])
 def query_logs():
     session=db.session
     logs=SagaLog.query.all()

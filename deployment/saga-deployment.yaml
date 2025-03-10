@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: saga
-        image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/saga:2.0
+        image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/saga:3.5
         ports:
         - containerPort: 5003
         env:
@@ -36,10 +36,23 @@ spec:
       - name: saga-log-data
         emptyDir: {}
 ---
-apiVersion: v1
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: saga-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 5003
+    type: HTTP
+    requestPath: /saga/ping
+---
 kind: Service
+apiVersion: v1
 metadata:
   name: saga-service
+  annotations:
+    cloud.google.com/backend-config: '{"default": "saga-config"}'
 spec:
   type: NodePort
   selector:
