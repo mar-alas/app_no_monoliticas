@@ -43,3 +43,17 @@ spec:
             name: bff-service
             port:
               number: 80
+      - pathType: Prefix
+        path: /verificacion
+        backend:
+          service:
+            name: verificacion-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /saga
+        backend:
+          service:
+            name: saga-service
+            port:
+              number: 80

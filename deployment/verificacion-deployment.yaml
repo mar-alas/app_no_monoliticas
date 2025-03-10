@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ingesta
+  name: verificacion
   labels:
-    app: ingesta
+    app: verificacion
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ingesta
+      app: verificacion
   template:
     metadata:
       labels:
-        app: ingesta
+        app: verificacion
     spec:
       containers:
-        - name: ingesta
-          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/ingesta:1.0
+        - name: verificacion
+          image: us-central1-docker.pkg.dev/appnomonoliticas-452202/app-no-monoliticas-repo/verificacion:1.0
           ports:
-            - containerPort: 5000
+            - containerPort: 5002
           env:
             - name: DB_USERNAME
               value: "postgres"
             - name: DB_PASSWORD
-              value: "monolitic4s-ingesta"
+              value: "monolitic4s-verificacion"
             - name: DB_HOSTNAME
               value: "127.0.0.1"
             - name: DB_PORT
@@ -50,7 +50,7 @@ spec:
           image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.0
           command:
             - "/cloud-sql-proxy"
-            - "appnomonoliticas-452202:us-central1:monoliticas-ingesta-db"
+            - "appnomonoliticas-452202:us-central1:monoliticas-verificacion-db"
           securityContext:
             runAsNonRoot: true
           volumeMounts:
@@ -59,7 +59,7 @@ spec:
               readOnly: true
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /secrets/cloudsql/key.json
+              value: /secrets/cloudsql/credentials.json
           resources:
             requests:
               memory: "64Mi"
@@ -71,45 +71,36 @@ spec:
         - name: gcp-credentials
           secret:
             secretName: gcp-credentials
-            items:
-            - key: key.json
-              path: key.json
         - name: gcp-application-credentials
           secret:
             secretName: gcp-credentials
-            items:
-            - key: key.json
-              path: key.json
         - name: cloudsql-instance-credentials
           secret:
-            secretName: gcp-credentials
-            items:
-            - key: key.json
-              path: key.json
+            secretName: cloudsql-instance-credentials
 ---
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: ingesta-config
+  name: verificacion-config
 spec:
   healthCheck:
     checkIntervalSec: 30
-    port: 5000
+    port: 5002
     type: HTTP
-    requestPath: /ingesta-imagen/ping
+    requestPath: /verificacion/ping
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: ingesta-service
+  name: verificacion-service
   annotations:
-    cloud.google.com/backend-config: '{"default": "ingesta-config"}'
+    cloud.google.com/backend-config: '{"default": "verificacion-config"}'
 spec:
   type: NodePort
   selector:
-    app: ingesta
+    app: verificacion
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5000
-      nodePort: 30002
+      targetPort: 5002
+      nodePort: 30004
