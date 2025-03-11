@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, BackgroundTasks, File, Form, UploadFile, Depends, HTTPException
+from fastapi import FastAPI, Request, BackgroundTasks, File, Form, UploadFile, Depends, HTTPException, Response
 import asyncio
 import uvicorn
 from sse_starlette.sse import EventSourceResponse
@@ -81,7 +81,8 @@ async def login(request: Request):
         )
         
         # Return the authentication service response
-        return response.json()
+        return Response(content=response.content, status_code=response.status_code, media_type="application/json")
+
     except Exception as e:
         return {"error": str(e), "status_code": 500}
 
