@@ -1,99 +1,427 @@
 {
 	"info": {
-		"_postman_id": "e3a69178-15dd-41cc-aeee-d81d287c01b2",
+		"_postman_id": "c7dca23d-2510-4d73-877d-066e9f8ab025",
 		"name": "Saludtech Microservicios",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "1812580"
+		"_exporter_id": "1304821",
+		"_collection_link": "https://www.postman.com/letsbeyond/workspace/saludtech-compumundohipermegared/collection/1812580-c7dca23d-2510-4d73-877d-066e9f8ab025?action=share&source=collection_link&creator=1304821"
 	},
 	"item": [
 		{
-			"name": "Micros.Anonimiz-anonimizar",
-			"event": [
+			"name": "Verificacion",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var template = `\r",
-							"<style type=\"text/css\">\r",
-							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
-							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
-							"    .tftable tr {background-color:#ffffff;}\r",
-							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
-							"    .tftable tr:hover {background-color:#e0ffff;}\r",
-							"</style>\r",
-							"\r",
-							"<table class=\"tftable\" border=\"1\">\r",
-							"    <tr>\r",
-							"        <th>Content-Type</th>\r",
-							"        <th>Response</th>\r",
-							"    </tr>\r",
-							"    <tr>\r",
-							"        <td>image/jpg</td>\r",
-							"        <td>null</td>\r",
-							"    </tr>\r",
-							"</table>\r",
-							"`;\r",
-							"\r",
-							"function constructVisualizerPayload() {\r",
-							"    return { response: pm.response.json() }\r",
-							"}\r",
-							"\r",
-							"pm.visualizer.set(template, constructVisualizerPayload());"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOGZkZmJlNi1iMjBhLTQ0NDktYWExMC0xZTg3YTdkNTJlMzIiLCJleHAiOjE3NDA1MjI2NTd9.eYTatRZowRoO7LbIGwvmw_XMHC_p1dEG-0wCoEwedNQ",
-							"type": "string"
+					"name": "Verificacion health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host_verificacion}}/verificacion/ping",
+							"protocol": "http",
+							"host": [
+								"{{host_verificacion}}"
+							],
+							"path": [
+								"verificacion",
+								"ping"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "image",
-							"type": "file",
-							"src": "///wsl.localhost/Ubuntu/home/dgamez/repos/MISO/app_no_monoliticas/repositorio_local/imagenes_no_anonimizadas/imagen_no_anonimizada_1.jpeg"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/anonimizar-imagen",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"anonimizar-imagen"
-					]
+				{
+					"name": "Verificador cambiar configuracion",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"configuracion\":\"FALLO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host_verificacion}}/verificacion/cambiar-config",
+							"protocol": "http",
+							"host": [
+								"{{host_verificacion}}"
+							],
+							"path": [
+								"verificacion",
+								"cambiar-config"
+							]
+						},
+						"description": "``` json\n{\n    \"configuracion\":\"EXITOSO\"\n}\n{\n    \"configuracion\":\"DEFAULT\"\n}\n{\n    \"configuracion\":\"FALLO\"\n}\n\n ```"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Micros.Anonimiz-health",
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Registro",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Country",
+								"value": "CO",
+								"type": "text"
+							},
+							{
+								"key": "X-Browser",
+								"value": "Chrome",
+								"type": "text"
+							},
+							{
+								"key": "X-OS",
+								"value": "macOS",
+								"type": "text"
+							},
+							{
+								"key": "X-Forwarded-For",
+								"value": "123.456.789.001",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n           \"name\": \"Admin\",\r\n           \"email\": \"admin@example.com\",\r\n           \"password\": \"admin123\"\r\n         }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host_usuarios}}/auth/register",
+							"protocol": "http",
+							"host": [
+								"{{host_usuarios}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host_usuarios}}/auth/login",
+							"protocol": "http",
+							"host": [
+								"{{host_usuarios}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BFF Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Save the token from the response to an environment variable\r",
+									"pm.globals.set('token', pm.response.json().token);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n           \"email\": \"admin@example.com\",\n           \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host_bff}}/bff/login",
+							"protocol": "http",
+							"host": [
+								"{{host_bff}}"
+							],
+							"path": [
+								"bff",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuarios health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host_usuarios}}/auth/ping",
+							"protocol": "http",
+							"host": [
+								"{{host_usuarios}}"
+							],
+							"path": [
+								"auth",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ingesta",
+			"item": [
+				{
+					"name": "Ingesta health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host_ingesta}}/ingesta-imagen/ping",
+							"protocol": "http",
+							"host": [
+								"{{host_ingesta}}"
+							],
+							"path": [
+								"ingesta-imagen",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BFF Ingesta Imagen",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "••••••"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "postman-cloud:///1eff86f6-91d2-4230-a31e-6d1b9bb4b83e"
+								},
+								{
+									"key": "proveedor",
+									"value": "latam",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host_bff}}/bff/v1/ingesta-imagen",
+							"protocol": "http",
+							"host": [
+								"{{host_bff}}"
+							],
+							"path": [
+								"bff",
+								"v1",
+								"ingesta-imagen"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Logs",
+			"item": [
+				{
+					"name": "Sagalog-get-logs",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host_saga}}/saga/get-logs",
+							"protocol": "http",
+							"host": [
+								"{{host_saga}}"
+							],
+							"path": [
+								"saga",
+								"get-logs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sagalog-erase-logs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Evento</th>\r",
+									"        <th>ID</th>\r",
+									"        <th>Correlation ID</th>\r",
+									"        <th>Timestamp</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response}}\r",
+									"        <tr>\r",
+									"            <td>{{evento}}</td>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{id_correlacion}}</td>\r",
+									"            <td>{{timestamp}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host_saga}}/saga/erase",
+							"protocol": "http",
+							"host": [
+								"{{host_saga}}"
+							],
+							"path": [
+								"saga",
+								"erase"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Anonimizacion",
+			"item": [
+				{
+					"name": "Anonimizacion health",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host_anonimizacion}}/anonimizacion/ping",
+							"protocol": "http",
+							"host": [
+								"{{host_anonimizacion}}"
+							],
+							"path": [
+								"anonimizacion",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BFF health",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOGZkZmJlNi1iMjBhLTQ0NDktYWExMC0xZTg3YTdkNTJlMzIiLCJleHAiOjE3NDA1MjI2NTd9.eYTatRZowRoO7LbIGwvmw_XMHC_p1dEG-0wCoEwedNQ",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -101,54 +429,43 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/",
+					"raw": "http://{{host_bff}}/bff/ping",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{host_bff}}"
 					],
-					"port": "5000",
 					"path": [
-						""
+						"bff",
+						"ping"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Micros.Usarios-login",
+			"name": "Micros.Anonimiz-consulta",
 			"request": {
 				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n           \"email\": \"admin@example.com\",\n           \"password\": \"admin123\"\n         }",
-					"options": {
-						"raw": {
-							"language": "json"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
 						}
-					}
+					]
 				},
+				"method": "GET",
+				"header": [],
 				"url": {
-					"raw": "http://localhost:8000/auth/login",
+					"raw": "http://{{host_anonimizacion}}/anonimizacion/imagenes",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host_anonimizacion}}"
 					],
-					"port": "8000",
 					"path": [
-						"auth",
-						"login"
+						"anonimizacion",
+						"imagenes"
 					]
 				}
 			},
