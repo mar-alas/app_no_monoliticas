@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import Flask, jsonify, request
 from src.seedwork.aplicacion.autenticacion import token_required
 from src.infraestructura.respositorios import RepositorioImagenesAnonimizadasSQLAlchemy
