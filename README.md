@@ -22,13 +22,15 @@ Escogimos Avro como nuestra tecnología de serialización por su facil implement
 
 * Daniel Gámez:
     * Desarrollo del microservición de anonimización de imagénes
+    * Desarrollo Saga
 * Maria del Mar Alas Escalante:
-    * Desarrollo del microservición de ingesta de imagenes de imagénes
+    * Desarrollo del microservición de ingesta de imagenes
 * Jhon Puentes:
     * Desarrollo de los BFFs
 * Robert Castro:
     * Desarrollo del microservicio de autenticacción
     * Despliegue en Kubernetes de la solución
+    * Desarrollo de microservicio de verificación
 
 ## Estructura carpetas
 
@@ -42,6 +44,7 @@ Escogimos Avro como nuestra tecnología de serialización por su facil implement
 ├── manejo_usuarios: microservicio de ingesta de gestión de usuario
 ├── repositorio_local: Imagenes de prueba en local
 ├── bff: Backend for Frontend
+├── saga: Saga logs
 ├── verificador: microservicio de verificacion de anonimización
 
 ```
