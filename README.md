@@ -41,9 +41,9 @@ Escogimos Avro como nuestra tecnología de serialización por su facil implement
 ├── ingesta_imagenes: microservicio de ingesta de imagenes
 ├── manejo_usuarios: microservicio de ingesta de gestión de usuario
 ├── repositorio_local: Imagenes de prueba en local
-├── mobile-bff: Backend for Frontend para usuarios mobile
-├── public-bff: Backend for Frontend para usuarios en general
-└── web-bff: Backend for Frontend para usuarios web deskop
+├── bff: Backend for Frontend
+├── verificador: microservicio de verificacion de anonimización
+
 ```
 ## Instrucciones
 
