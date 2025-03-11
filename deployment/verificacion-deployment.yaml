@@ -29,7 +29,7 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: BROKER_HOST
-              value: "pulsar"
+              value: "pulsar2"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/var/secrets/google/key.json"
           volumeMounts:
@@ -104,3 +104,29 @@ spec:
       port: 80
       targetPort: 5002
       nodePort: 30004
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: verificacion-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: verificacion
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 30
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 30

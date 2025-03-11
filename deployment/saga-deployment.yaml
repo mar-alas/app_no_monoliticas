@@ -21,7 +21,7 @@ spec:
         - containerPort: 5003
         env:
         - name: BROKER_HOST
-          value: "pulsar"
+          value: "pulsar2"
         resources:
           limits:
             cpu: "200m"

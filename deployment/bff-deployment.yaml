@@ -25,7 +25,7 @@ spec:
             - name: INGESTA_SERVICE_URL
               value: "http://ingesta-service"
             - name: BROKER_HOST
-              value: "pulsar"
+              value: "pulsar2"
             - name: USER_AUTH_SERVICE_URL
               value: "http://servicio-manejo-usuarios"
           resources:
@@ -74,3 +74,28 @@ spec:
       port: 80
       targetPort: 8001
       nodePort: 30003
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: bff-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: bff
+  minReplicas: 6
+  maxReplicas: 8
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 30
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 30
