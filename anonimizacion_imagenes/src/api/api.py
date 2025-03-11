@@ -18,8 +18,8 @@ def validar_reglas_de_seguridad(f):
         reglas = [
             PaisNoPermitido(country),
             NavegadorNoPermitido(browser),
-            SistemaOperativoNoPermitido(os),
-            IPNoPermitida(ip_address)
+            SistemaOperativoNoPermitido(os)
+            # IPNoPermitida(ip_address)
         ]
 
         for regla in reglas:
