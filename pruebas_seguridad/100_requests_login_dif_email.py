@@ -14,7 +14,7 @@ headers = {
     'x-forwarded-for': '123.456.789.000',
     'x-os': 'windows'
 }
-email = "admin@example.com"
+email = "admin@saludtech.com"
 fake = Faker()
 
 def make_request(email, password):
