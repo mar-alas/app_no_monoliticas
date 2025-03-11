@@ -4,6 +4,7 @@ from aplicacion.token_service import TokenService
 from infraestructura.sql_user_repository import SQLUserRepository
 from infraestructura.db import get_db
 from functools import wraps
+from dominio.security_rules import PaisNoPermitido, NavegadorNoPermitido, SistemaOperativoNoPermitido, DominioCorreoNoPermitido, IPNoPermitida
 
 auth_blueprint = Blueprint("auth", __name__)
 
@@ -27,18 +28,54 @@ def token_required(f):
         return f(user_id, *args, **kwargs)
     return decorated
 
+# Middleware para validar reglas de seguridad
+def validar_reglas_de_seguridad(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        country = request.headers.get("X-Country", "").upper()
+        browser = request.headers.get("X-Browser", "").lower()
+        os = request.headers.get("X-OS", "").lower()
+        ip_address = request.headers.get("X-Forwarded-For", "")
+
+        reglas = [
+            PaisNoPermitido(country),
+            NavegadorNoPermitido(browser),
+            SistemaOperativoNoPermitido(os),
+            IPNoPermitida(ip_address)
+        ]
+
+        for regla in reglas:
+            if not regla.es_valido():
+                return jsonify({"message": "No autorizado", "reason": regla.mensaje_error()}), 401
+
+        return f(*args, **kwargs)
+    return decorated
+
+
+
 @auth_blueprint.route("/register", methods=["POST"])
+@validar_reglas_de_seguridad
 def register():
     data = request.json
+
+    if not DominioCorreoNoPermitido(data["email"]).es_valido():
+        return jsonify({"message": "No autorizado: dominio de correo no permitido"}), 401
+
     try:
         result = auth_service.register_user(data["name"], data["email"], data["password"])
         return jsonify(result), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
+
 @auth_blueprint.route("/login", methods=["POST"])
+@validar_reglas_de_seguridad
 def login():
     data = request.json
+
+    if not DominioCorreoNoPermitido(data["email"]).es_valido():
+        return jsonify({"message": "No autorizado: dominio de correo no permitido"}), 401
+
     user = auth_service.authenticate_user(data["email"], data["password"])
     if not user:
         return jsonify({"message": "Credenciales inválidas"}), 401
@@ -55,5 +92,6 @@ def ping():
 
 @auth_blueprint.route("/profile", methods=["GET"])
 @token_required
+@validar_reglas_de_seguridad
 def profile(user_id):
     return jsonify({"message": "Perfil de usuario", "user_id": user_id})
